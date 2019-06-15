@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MailClient
@@ -14,20 +7,47 @@ namespace MailClient
     {
         private MailClientForm _parentForm;
 
-        public MailPreview(MailClientForm parentForm, string from, string to, string subject, string body, string time, EmailFolder folderType)
+        public MailPreview(MailClientForm parentForm, SentEmail sentEmail)
         {
             InitializeComponent();
 
             _parentForm = parentForm;
-            tbFrom.Text = from;
-            tbTo.Text = to;
-            tbSubject.Text = subject;
-            tbBody.Text = body;
+            tbFrom.Text = sentEmail.From;
+            tbTo.Text = sentEmail.To;
+            tbSubject.Text = sentEmail.Subject;
+            tbBody.Text = sentEmail.Body;
 
-            if(folderType == EmailFolder.Inbox)
-                lbArrivalTime.Text = "Arrival Time: " + time;
-            else if (folderType == EmailFolder.SentEmails)
-                lbArrivalTime.Text = "Sent Time: " + time;
+
+            lbArrivalTime.Text = "Sent Time: " + sentEmail.SentTime;
+
+            _parentForm.MailReceiver.SetMessageSeen(EmailType.SentEmails, sentEmail.UniqueId);
+        }
+        public MailPreview(MailClientForm parentForm, CollectionEmail collectionEmail)
+        {
+            InitializeComponent();
+
+            _parentForm = parentForm;
+            tbFrom.Text = collectionEmail.From;
+            tbTo.Text = collectionEmail.To;
+            tbSubject.Text = collectionEmail.Subject;
+            tbBody.Text = collectionEmail.Body;
+
+
+            lbArrivalTime.Text = "Date: " + collectionEmail.Date;
+        }
+        public MailPreview(MailClientForm parentForm, InboxEmail inboxEmail)
+        {
+            InitializeComponent();
+
+            _parentForm = parentForm;
+            tbFrom.Text = inboxEmail.From;
+            tbTo.Text = inboxEmail.To;
+            tbSubject.Text = inboxEmail.Subject;
+            tbBody.Text = inboxEmail.Body;
+
+
+            lbArrivalTime.Text = "Arrival Time: " + inboxEmail.ArrivalTime;
+            _parentForm.MailReceiver.SetMessageSeen(EmailType.Inbox, inboxEmail.UniqueId);
         }
 
         private void buttonForward_Click(object sender, EventArgs e)

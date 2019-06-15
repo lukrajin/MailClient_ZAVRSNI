@@ -69,6 +69,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CollectionEmail.cs" />
+    <Compile Include="CustomFolder.cs" />
+    <Compile Include="FolderEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FolderEdit.Designer.cs">
+      <DependentUpon>FolderEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImportExportEmailsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,6 +113,10 @@
       <DependentUpon>MailClientForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SentEmail.cs" />
+    <Compile Include="ServerInfo.cs" />
+    <EmbeddedResource Include="FolderEdit.resx">
+      <DependentUpon>FolderEdit.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ImportExportEmailsForm.resx">
       <DependentUpon>ImportExportEmailsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -150,6 +161,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icons8-opened-folder-40.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icons8-secured-letter-40.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="read_message_40px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="reading_confirmation_40px.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

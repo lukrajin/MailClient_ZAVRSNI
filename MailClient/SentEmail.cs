@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MailKit;
 
 namespace MailClient
 {
@@ -13,6 +14,8 @@ namespace MailClient
         public string To { get; set; }
         public string Subject { get; set; }
         public string Body { get; set; }
-        public string SentTime { get; set; }
+        public DateTime SentTime { get; set; }
+        public UniqueId UniqueId { get; internal set; }
+        public bool IsRead { get; internal set; }
     }
 }

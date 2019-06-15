@@ -7,15 +7,29 @@ namespace MailClient
     public partial class LoginForm : Form
     {
         private MailClientForm _parentForm;
-
         public LoginForm(MailClientForm parentForm)
         {
             InitializeComponent();
             _parentForm = parentForm;
+            comboBoxServer.Text = "Gmail";
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
+            string server;
+            int port;
+
+            if(comboBoxServer.Text == "Gmail")
+            {
+                server = ServerInfo.Gmail.ImapServer;
+                port = ServerInfo.Gmail.ImapPort;
+            }
+            else
+            {
+                server = ServerInfo.Yandex.ImapServer;
+                port = ServerInfo.Yandex.ImapPort;
+            }
+
             btnLogin.Enabled = false;
             tbUsername.Enabled = false;
             tbPassword.Enabled = false;
@@ -27,7 +41,7 @@ namespace MailClient
                     {
                         try
                         {
-                            var mailReceiver = new MailReceiver("imap.yandex.com", 993, true, tbUsername.Text, tbPassword.Text);
+                            var mailReceiver = new MailReceiver(server, port, true, tbUsername.Text, tbPassword.Text, _parentForm);
                             mailReceiver.Connect();
 
                             this.Invoke((Action)(() => this.Hide()));
@@ -39,7 +53,7 @@ namespace MailClient
                             _parentForm.MailReceiver = mailReceiver;
                             _parentForm.ReceivedEmails = mailReceiver.GetInboxEmailList();
                             _parentForm.SentEmails = mailReceiver.GetSentEmailList();
-                            _parentForm.LoadEmails(EmailFolder.Inbox);
+                            _parentForm.LoadEmails(EmailView.Inbox);
 
                             this.Invoke((Action)(() => btnLogout.Enabled = true));
 

@@ -17,196 +17,241 @@ namespace MailClient
             _parentForm = parentForm;
         }
 
-        public void Export(EmailFolder folderType, bool isDefaultLocation)
+        public void ExportEmails(EmailType emailType, bool isDefaultLocation)
         {
-            if (folderType == EmailFolder.Inbox)
+            if (emailType == EmailType.Inbox)
             {
                 var records = new List<InboxEmail>();
 
-                foreach (var email in _parentForm.ReceivedEmails)
+                foreach (var email in _parentForm.ReceivedEmails.Values)
                 {
                     records.Add(email);
                 }
 
-                Save(folderType, records, isDefaultLocation);
+                SaveEmails(emailType, records, isDefaultLocation);
             }
-            else if (folderType == EmailFolder.SentEmails)
+            else if (emailType == EmailType.SentEmails)
             {
                 var records = new List<SentEmail>();
 
-                foreach (var email in _parentForm.SentEmails)
+                foreach (var email in _parentForm.SentEmails.Values)
                 {
                     records.Add(email);
                 }
 
-                Save(folderType, records, isDefaultLocation);
+                SaveEmails(emailType, records, isDefaultLocation);
             }
             else
             {
                 var records = new List<CollectionEmail>();
 
-                foreach (var email in _parentForm.EmailCollection)
+                foreach (var email in _parentForm.EmailCollection.Values)
                 {
                     records.Add(email);
                 }
 
-                Save(folderType, records, isDefaultLocation);
+                SaveEmails(emailType, records, isDefaultLocation);
             }
         }
-
-        private void Save<T>(EmailFolder folderType, List<T> records, bool isDefaultLocation)
+        public void ExportFolderList()
         {
-            if (isDefaultLocation)
+            var records = new List<CustomFolder>();
+
+            foreach(var folder in _parentForm.FolderList)
             {
-                var _fileName = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) + "\\Data",
-                    GetEmailTypeFileName(folderType) + ".csv");
-
-                if (!Directory.Exists(Path.GetDirectoryName(_fileName)))
-                    Directory.CreateDirectory(Path.GetDirectoryName(_fileName));
-
-                WriteRecords(records, _fileName);
-
-                return;
+                records.Add(folder.Value);
             }
+            var _fileName = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) + "\\Data",
+                "FolderList" + ".csv");
 
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.FileName = "SentEmails_" + DateTime.Now.ToString("dd_MM_yyyy hh_mm_ss") + ".csv";
-            saveFileDialog.Filter = "CSV files (*.csv)|*.txt|All files (*.*)|*.*";
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                WriteRecords(records, saveFileDialog.FileName);
-            }
+            if (!Directory.Exists(Path.GetDirectoryName(_fileName)))
+                Directory.CreateDirectory(Path.GetDirectoryName(_fileName));
+
+            WriteRecords(records, _fileName);
+
         }
 
-        private void WriteRecords<T>(List<T> records, string path)
+        internal ConcurrentDictionary<string, CustomFolder> LoadFolderList()
         {
-            using (var writer = new StreamWriter(path))
-            using (var csv = new CsvWriter(writer))
+            var folderList = new List<CustomFolder>();
+
+
+            var _fileName = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) + "\\Data",
+            "FolderList"+ ".csv");
+
+            if (!File.Exists(_fileName))
+                return null;
+
+            using (var reader = new StreamReader(_fileName))
+            using (var csv = new CsvReader(reader))
             {
-                csv.WriteRecords(records);
+                folderList = csv.GetRecords<CustomFolder>().ToList();
             }
+
+            var folderListConcurrent = new ConcurrentDictionary<string,CustomFolder>();
+
+            foreach (var folder in folderList)
+            {
+                folderListConcurrent.TryAdd(folder.FolderName, folder);
+            }
+
+            return folderListConcurrent;
+        
         }
 
-        public string GetEmailTypeFileName(EmailFolder folderType)
+    private void SaveEmails<T>(EmailType emailType, List<T> records, bool isDefaultLocation)
+    {
+        if (isDefaultLocation)
         {
-            if (folderType == EmailFolder.Inbox)
-            {
-                return "InboxEmail";
-            }
-            else if (folderType == EmailFolder.SentEmails)
-            {
-                return "SentEmails";
-            }
-            else
-            {
-                return "EmailCollection";
-            }
+            var _fileName = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) + "\\Data",
+                GetEmailTypeFileName(emailType) + ".csv");
+
+            if (!Directory.Exists(Path.GetDirectoryName(_fileName)))
+                Directory.CreateDirectory(Path.GetDirectoryName(_fileName));
+
+            WriteRecords(records, _fileName);
+
+            return;
         }
 
-        public string GetEmailsPath(EmailFolder folderType, bool isDefaultLocation)
+        SaveFileDialog saveFileDialog = new SaveFileDialog();
+        saveFileDialog.FileName = "SentEmails_" + DateTime.Now.ToString("dd_MM_yyyy hh_mm_ss") + ".csv";
+        saveFileDialog.Filter = "CSV files (*.csv)|*.txt|All files (*.*)|*.*";
+        if (saveFileDialog.ShowDialog() == DialogResult.OK)
         {
-            string fileName = "";
-
-            if (isDefaultLocation)
-            {
-                var _fileName = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) + "\\Data",
-                    GetEmailTypeFileName(folderType) + ".csv");
-                if (File.Exists(_fileName))
-                {
-                    fileName = _fileName;
-                }
-                else
-                {
-                    MessageBox.Show("Loading Failed", "File does not exists");
-                    return null;
-                }
-            }
-            else
-            {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "CSV files (*.csv)|*.txt|All files (*.*)|*.*";
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    fileName = openFileDialog.FileName;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-
-            return fileName;
-        }
-
-        public ConcurrentBag<SentEmail> LoadSent(bool isDefaultLocation)
-        {
-            var sentEmails = new List<SentEmail>();
-
-            if (GetEmailsPath(EmailFolder.SentEmails, isDefaultLocation) != null)
-            {
-                using (var reader = new StreamReader(GetEmailsPath(EmailFolder.SentEmails, isDefaultLocation)))
-                using (var csv = new CsvReader(reader))
-                {
-                    sentEmails = csv.GetRecords<SentEmail>().ToList();
-                }
-
-                var sentEmailsConcurrent = new ConcurrentBag<SentEmail>();
-                foreach (var email in sentEmails)
-                {
-                    sentEmailsConcurrent.Add(email);
-                }
-
-                return sentEmailsConcurrent;
-            }
-
-            return null;
-        }
-
-        public ConcurrentBag<InboxEmail> LoadInbox(bool isDefaultLocation)
-        {
-            var inboxEmails = new List<InboxEmail>();
-
-            if (GetEmailsPath(EmailFolder.Inbox, isDefaultLocation) != null)
-            {
-                using (var reader = new StreamReader(GetEmailsPath(EmailFolder.Inbox, isDefaultLocation)))
-                using (var csv = new CsvReader(reader))
-                {
-                    inboxEmails = csv.GetRecords<InboxEmail>().ToList();
-                }
-
-                var inboxEmailsConcurrent = new ConcurrentBag<InboxEmail>();
-                foreach (var email in inboxEmails)
-                {
-                    inboxEmailsConcurrent.Add(email);
-                }
-
-                return inboxEmailsConcurrent;
-            }
-
-            return null;
-        }
-
-        public ConcurrentBag<CollectionEmail> LoadCollection(bool isDefaultLocation)
-        {
-            var collectionEmails = new List<CollectionEmail>();
-            if (GetEmailsPath(EmailFolder.SentEmails, isDefaultLocation) != null)
-            {
-                using (var reader = new StreamReader(GetEmailsPath(EmailFolder.EmailCollection, isDefaultLocation)))
-                using (var csv = new CsvReader(reader))
-                {
-                    collectionEmails = csv.GetRecords<CollectionEmail>().ToList();
-                }
-
-                var emailsCollectionConcurrent = new ConcurrentBag<CollectionEmail>();
-                foreach (var email in collectionEmails)
-                {
-                    emailsCollectionConcurrent.Add(email);
-                }
-
-                return emailsCollectionConcurrent;
-            }
-
-            return null;
+            WriteRecords(records, saveFileDialog.FileName);
         }
     }
+
+    private void WriteRecords<T>(List<T> records, string path)
+    {
+        using (var writer = new StreamWriter(path))
+        using (var csv = new CsvWriter(writer))
+        {
+            csv.WriteRecords(records);
+        }
+    }
+
+    public string GetEmailTypeFileName(EmailType emailType)
+    {
+        if (emailType == EmailType.Inbox)
+        {
+            return "InboxEmail";
+        }
+        else if (emailType == EmailType.SentEmails)
+        {
+            return "SentEmails";
+        }
+        else
+        {
+            return "EmailCollection";
+        }
+    }
+
+    public string GetEmailsPath(EmailType emailType, bool isDefaultLocation)
+    {
+        string fileName = "";
+
+        if (isDefaultLocation)
+        {
+            var _fileName = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) + "\\Data",
+                GetEmailTypeFileName(emailType) + ".csv");
+            if (File.Exists(_fileName))
+            {
+                fileName = _fileName;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        else
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "CSV files (*.csv)|*.txt|All files (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                fileName = openFileDialog.FileName;
+            }
+            else
+            {
+                MessageBox.Show("Loading Failed", "File does not exists");
+                return null;
+            }
+        }
+
+        return fileName;
+    }
+
+    public ConcurrentDictionary<string, SentEmail> LoadSent(bool isDefaultLocation)
+    {
+        var sentEmails = new List<SentEmail>();
+
+        if (GetEmailsPath(EmailType.SentEmails, isDefaultLocation) != null)
+        {
+            using (var reader = new StreamReader(GetEmailsPath(EmailType.SentEmails, isDefaultLocation)))
+            using (var csv = new CsvReader(reader))
+            {
+                sentEmails = csv.GetRecords<SentEmail>().ToList();
+            }
+
+                var sentEmailsConcurrent = new ConcurrentDictionary<string, SentEmail>();
+            foreach (var email in sentEmails)
+            {
+                sentEmailsConcurrent.TryAdd(email.Id, email);
+            }
+
+            return sentEmailsConcurrent;
+        }
+
+        return null;
+    }
+
+    public ConcurrentDictionary<string, InboxEmail> LoadInbox(bool isDefaultLocation)
+    {
+        var inboxEmails = new List<InboxEmail>();
+
+        if (GetEmailsPath(EmailType.Inbox, isDefaultLocation) != null)
+        {
+            using (var reader = new StreamReader(GetEmailsPath(EmailType.Inbox, isDefaultLocation)))
+            using (var csv = new CsvReader(reader))
+            {
+                inboxEmails = csv.GetRecords<InboxEmail>().ToList();
+            }
+
+                var inboxEmailsConcurrent = new ConcurrentDictionary<string, InboxEmail>();
+            foreach (var email in inboxEmails)
+            {
+                inboxEmailsConcurrent.TryAdd(email.Id, email);
+            }
+
+            return inboxEmailsConcurrent;
+        }
+
+        return null;
+    }
+
+    public ConcurrentDictionary<string,CollectionEmail> LoadCollection(bool isDefaultLocation)
+    {
+        var collectionEmails = new List<CollectionEmail>();
+        if (GetEmailsPath(EmailType.CollectionEmail, isDefaultLocation) != null)
+        {
+            using (var reader = new StreamReader(GetEmailsPath(EmailType.CollectionEmail, isDefaultLocation)))
+            using (var csv = new CsvReader(reader))
+            {
+                collectionEmails = csv.GetRecords<CollectionEmail>().ToList();
+            }
+
+            var emailsCollectionConcurrent = new ConcurrentDictionary<string, CollectionEmail>();
+            foreach (var email in collectionEmails)
+            {
+                emailsCollectionConcurrent.TryAdd(email.Id, email);
+            }
+
+            return emailsCollectionConcurrent;
+        }
+
+        return null;
+    }
+}
 }

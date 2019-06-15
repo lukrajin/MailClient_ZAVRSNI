@@ -34,26 +34,35 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.panelLoading = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.contextMenuStripEmail = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveToToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripFolder = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripFolderList = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolStripButtonLogin = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonNewEmail = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonInbox = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonSent = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonCollection = new System.Windows.Forms.ToolStripButton();
-            this.panelLoading = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.contextMenuStripEmail = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.copyToCollectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButtonImportExport = new System.Windows.Forms.ToolStripButton();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewEmails)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.panelLoading.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStripEmail.SuspendLayout();
+            this.contextMenuStripFolder.SuspendLayout();
+            this.contextMenuStripFolderList.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // dataGridViewEmails
@@ -64,7 +73,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridViewEmails.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            this.dataGridViewEmails.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.dataGridViewEmails.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.dataGridViewEmails.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewEmails.GridColor = System.Drawing.Color.LightGray;
             this.dataGridViewEmails.Location = new System.Drawing.Point(0, 43);
             this.dataGridViewEmails.MinimumSize = new System.Drawing.Size(917, 459);
             this.dataGridViewEmails.Name = "dataGridViewEmails";
@@ -114,6 +126,123 @@
             this.toolStrip1.Size = new System.Drawing.Size(1102, 40);
             this.toolStrip1.TabIndex = 4;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // panelLoading
+            // 
+            this.panelLoading.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelLoading.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.panelLoading.Controls.Add(this.pictureBox1);
+            this.panelLoading.Controls.Add(this.label1);
+            this.panelLoading.Location = new System.Drawing.Point(0, 43);
+            this.panelLoading.Name = "panelLoading";
+            this.panelLoading.Size = new System.Drawing.Size(1102, 490);
+            this.panelLoading.TabIndex = 5;
+            this.panelLoading.Visible = false;
+            // 
+            // label1
+            // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label1.Location = new System.Drawing.Point(489, 405);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(102, 30);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Loading...";
+            // 
+            // contextMenuStripEmail
+            // 
+            this.contextMenuStripEmail.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewToolStripMenuItem,
+            this.moveToToolStripMenuItem1,
+            this.copyToToolStripMenuItem,
+            this.deleteToolStripMenuItem});
+            this.contextMenuStripEmail.Name = "contextMenuStripEmail";
+            this.contextMenuStripEmail.Size = new System.Drawing.Size(121, 92);
+            this.contextMenuStripEmail.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripEmail_Opening);
+            // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.viewToolStripMenuItem.Text = "View";
+            this.viewToolStripMenuItem.Click += new System.EventHandler(this.viewToolStripMenuItem_Click);
+            // 
+            // moveToToolStripMenuItem1
+            // 
+            this.moveToToolStripMenuItem1.Name = "moveToToolStripMenuItem1";
+            this.moveToToolStripMenuItem1.Size = new System.Drawing.Size(120, 22);
+            this.moveToToolStripMenuItem1.Text = "Move To";
+            this.moveToToolStripMenuItem1.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.moveToToolStripMenuItem1_DropDownItemClicked);
+            // 
+            // copyToToolStripMenuItem
+            // 
+            this.copyToToolStripMenuItem.Name = "copyToToolStripMenuItem";
+            this.copyToToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.copyToToolStripMenuItem.Text = "Copy To";
+            this.copyToToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.copyToToolStripMenuItem_DropDownItemClicked);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // contextMenuStripFolder
+            // 
+            this.contextMenuStripFolder.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openToolStripMenuItem,
+            this.renameToolStripMenuItem,
+            this.deleteToolStripMenuItem1});
+            this.contextMenuStripFolder.Name = "contextMenuStripFolder";
+            this.contextMenuStripFolder.Size = new System.Drawing.Size(181, 92);
+            // 
+            // renameToolStripMenuItem
+            // 
+            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.renameToolStripMenuItem.Text = "Rename";
+            this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
+            // 
+            // deleteToolStripMenuItem1
+            // 
+            this.deleteToolStripMenuItem1.Name = "deleteToolStripMenuItem1";
+            this.deleteToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.deleteToolStripMenuItem1.Text = "Delete";
+            this.deleteToolStripMenuItem1.Click += new System.EventHandler(this.deleteToolStripMenuItem1_Click);
+            // 
+            // contextMenuStripFolderList
+            // 
+            this.contextMenuStripFolderList.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addFolderToolStripMenuItem});
+            this.contextMenuStripFolderList.Name = "contextMenuStripFolderList";
+            this.contextMenuStripFolderList.Size = new System.Drawing.Size(133, 26);
+            // 
+            // addFolderToolStripMenuItem
+            // 
+            this.addFolderToolStripMenuItem.Name = "addFolderToolStripMenuItem";
+            this.addFolderToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.addFolderToolStripMenuItem.Text = "Add Folder";
+            this.addFolderToolStripMenuItem.Click += new System.EventHandler(this.addFolderToolStripMenuItem_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.pictureBox1.ErrorImage = null;
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.InitialImage = null;
+            this.pictureBox1.Location = new System.Drawing.Point(334, 81);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(412, 309);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox1.TabIndex = 1;
+            this.pictureBox1.TabStop = false;
             // 
             // toolStripButtonLogin
             // 
@@ -165,7 +294,7 @@
             this.toolStripButtonRefresh.AutoSize = false;
             this.toolStripButtonRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripButtonRefresh.Enabled = false;
-            this.toolStripButtonRefresh.Image = global::MailClient.Properties.Resources.Refresh;
+            this.toolStripButtonRefresh.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRefresh.Image")));
             this.toolStripButtonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
             this.toolStripButtonRefresh.Size = new System.Drawing.Size(38, 38);
@@ -183,69 +312,6 @@
             this.toolStripButtonCollection.Text = "Collection";
             this.toolStripButtonCollection.Click += new System.EventHandler(this.toolStripButtonCollection_Click);
             // 
-            // panelLoading
-            // 
-            this.panelLoading.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
-            this.panelLoading.Controls.Add(this.pictureBox1);
-            this.panelLoading.Controls.Add(this.label1);
-            this.panelLoading.Location = new System.Drawing.Point(0, 43);
-            this.panelLoading.Name = "panelLoading";
-            this.panelLoading.Size = new System.Drawing.Size(1102, 490);
-            this.panelLoading.TabIndex = 5;
-            this.panelLoading.Visible = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.Color.White;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(334, 81);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(412, 309);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.pictureBox1.TabIndex = 1;
-            this.pictureBox1.TabStop = false;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label1.Location = new System.Drawing.Point(489, 405);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(102, 30);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Loading...";
-            // 
-            // contextMenuStripEmail
-            // 
-            this.contextMenuStripEmail.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.viewToolStripMenuItem,
-            this.copyToCollectionToolStripMenuItem,
-            this.deleteToolStripMenuItem});
-            this.contextMenuStripEmail.Name = "contextMenuStripEmail";
-            this.contextMenuStripEmail.Size = new System.Drawing.Size(174, 70);
-            this.contextMenuStripEmail.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripEmail_Opening);
-            // 
-            // copyToCollectionToolStripMenuItem
-            // 
-            this.copyToCollectionToolStripMenuItem.Name = "copyToCollectionToolStripMenuItem";
-            this.copyToCollectionToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-            this.copyToCollectionToolStripMenuItem.Text = "Copy to Collection";
-            this.copyToCollectionToolStripMenuItem.Click += new System.EventHandler(this.copyToCollectionToolStripMenuItem_Click);
-            // 
-            // viewToolStripMenuItem
-            // 
-            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-            this.viewToolStripMenuItem.Text = "View";
-            this.viewToolStripMenuItem.Click += new System.EventHandler(this.viewToolStripMenuItem_Click);
-            // 
-            // deleteToolStripMenuItem
-            // 
-            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-            this.deleteToolStripMenuItem.Text = "Delete";
-            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
-            // 
             // toolStripButtonImportExport
             // 
             this.toolStripButtonImportExport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -256,6 +322,13 @@
             this.toolStripButtonImportExport.Size = new System.Drawing.Size(34, 37);
             this.toolStripButtonImportExport.Text = "Import/Export Emails";
             this.toolStripButtonImportExport.Click += new System.EventHandler(this.toolStripButtonImportExport_Click);
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // MailClientForm
             // 
@@ -280,8 +353,10 @@
             this.toolStrip1.PerformLayout();
             this.panelLoading.ResumeLayout(false);
             this.panelLoading.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.contextMenuStripEmail.ResumeLayout(false);
+            this.contextMenuStripFolder.ResumeLayout(false);
+            this.contextMenuStripFolderList.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -293,7 +368,7 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton toolStripButtonLogin;
-        private System.Windows.Forms.ToolStripButton toolStripButtonRefresh;
+        public System.Windows.Forms.ToolStripButton toolStripButtonRefresh;
         private System.Windows.Forms.ToolStripButton toolStripButtonNewEmail;
         private System.Windows.Forms.ToolStripButton toolStripButtonSent;
         private System.Windows.Forms.ToolStripButton toolStripButtonInbox;
@@ -303,9 +378,16 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripEmail;
-        private System.Windows.Forms.ToolStripMenuItem copyToCollectionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButtonImportExport;
+        private System.Windows.Forms.ToolStripMenuItem copyToToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripFolder;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripFolderList;
+        private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem addFolderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveToToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
     }
 }
