@@ -18,6 +18,13 @@ namespace MailClient
             "Sent Items", "Sent Mail" ,"Sent Email", "Poslano", "sent-items", "sent-email", "sent-mail" };
         ImapClient client = new ImapClient();
         private string mailServer;
+        public string Host
+        {
+            get
+            {
+                return mailServer;
+            }
+        }
         private int port;
         private bool ssl;
         public string Login { get; set; }
@@ -172,6 +179,25 @@ namespace MailClient
 
                 SentFolder.Append(mimeMessage);
             }
+        }
+        public MimeMessage GetEmail(EmailType emailType, UniqueId uniqueId)
+        {
+            if (emailType == EmailType.Inbox)
+            {
+                if (!client.Inbox.IsOpen)
+                    client.Inbox.Open(FolderAccess.ReadWrite);
+
+                return client.Inbox.GetMessage(uniqueId);
+            }
+            else if(emailType == EmailType.SentEmails)
+            {
+                if (!SentFolder.IsOpen)
+                    SentFolder.Open(FolderAccess.ReadWrite);
+
+                return SentFolder.GetMessage(uniqueId);
+            }
+
+            return null;
         }
     }
 }

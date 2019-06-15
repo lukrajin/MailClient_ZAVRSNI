@@ -35,6 +35,9 @@
   <PropertyGroup>
     <StartupObject>MailClient.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>email.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.5.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\packages\BouncyCastle.1.8.5\lib\BouncyCastle.Crypto.dll</HintPath>
@@ -173,6 +176,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="reading_confirmation_40px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="email.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

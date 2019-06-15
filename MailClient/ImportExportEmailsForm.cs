@@ -12,9 +12,28 @@ namespace MailClient
 {
     public partial class ImportExportEmailsForm : Form
     {
-        public ImportExportEmailsForm()
+        private MailClientForm _parentForm;
+
+        public ImportExportEmailsForm(MailClientForm parentForm)
         {
             InitializeComponent();
+            _parentForm = parentForm;
+        }
+
+        private void comboBoxImportFrom_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(comboBoxImportFrom.Text == "Gmail" || comboBoxImportFrom.Text == "Yandex")
+            {
+                labelFolder.Visible = true;
+                comboBoxServerFolder.Visible = true;
+                groupBoxCredentials.Visible = true;
+            }
+            else
+            {
+                labelFolder.Visible = false;
+                comboBoxServerFolder.Visible = false;
+                groupBoxCredentials.Visible = false;
+            }
         }
     }
 }

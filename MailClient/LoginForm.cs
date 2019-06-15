@@ -46,7 +46,19 @@ namespace MailClient
 
                             this.Invoke((Action)(() => this.Hide()));
 
-                            _parentForm.toolStripStatusLabel.Text = "Logged In - " + mailReceiver.Login + "@yandex.ru";
+                            if (!mailReceiver.Login.Contains("@"))
+                            {
+                                if (mailReceiver.Host.Contains("yandex"))
+                                    _parentForm.toolStripStatusLabel.Text = "Logged In - " + mailReceiver.Login + "@yandex.ru";
+                                else
+                                {
+                                    _parentForm.toolStripStatusLabel.Text = "Logged In - " + mailReceiver.Login + "@gmail.com";
+                                }
+                            }
+                            else
+                            {
+                                _parentForm.toolStripStatusLabel.Text = "Logged In - " + mailReceiver.Login;
+                            }
 
                             _parentForm.Invoke((Action)(() => _parentForm.panelLoading.Visible = true));
                            

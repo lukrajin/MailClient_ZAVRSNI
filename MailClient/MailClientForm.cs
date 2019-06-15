@@ -309,6 +309,9 @@ namespace MailClient
 
         private void dataGridViewEmails_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            if (buttonRefreshClicked)
+                return;
+
             var hti = dataGridViewEmails.HitTest(e.X, e.Y);
 
             if (hti.RowIndex == -1)
@@ -407,7 +410,7 @@ namespace MailClient
             if (previousHoveredRow != null)
                 previousHoveredRow.DefaultCellStyle.BackColor = Color.White;
 
-            if (e.RowIndex > 0)
+            if (e.RowIndex >= 0)
             {
                 dataGridViewEmails.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.AliceBlue;
                 previousHoveredRow = dataGridViewEmails.Rows[e.RowIndex];
@@ -416,6 +419,9 @@ namespace MailClient
 
         private void dataGridViewEmails_MouseDown(object sender, MouseEventArgs e)
         {
+            if (buttonRefreshClicked)
+                return;
+
             if (dataGridViewEmails.DataSource == null)
                 return;
 
@@ -546,7 +552,7 @@ namespace MailClient
 
         private void toolStripButtonImportExport_Click(object sender, EventArgs e)
         {
-            ImportExportEmailsForm importExportEmailsForm = new ImportExportEmailsForm();
+            ImportExportEmailsForm importExportEmailsForm = new ImportExportEmailsForm(this);
             importExportEmailsForm.StartPosition = FormStartPosition.Manual;
             importExportEmailsForm.Location = MousePosition;
             importExportEmailsForm.Show();
@@ -599,7 +605,8 @@ namespace MailClient
                                 Body = selectedEmail.Body,
                                 Date = selectedEmail.ArrivalTime,
                                 CustomFolderName = selectedFolderId,
-                                EmailType = EmailType.Inbox
+                                EmailType = EmailType.Inbox,
+                                UniqueId = selectedEmail.UniqueId
                             });
                     }
                     else if (CurrentView == EmailView.SentEmails)
@@ -619,7 +626,8 @@ namespace MailClient
                                 Body = selectedEmail.Body,
                                 Date = selectedEmail.SentTime,
                                 CustomFolderName = selectedFolderId,
-                                EmailType = EmailType.SentEmails
+                                EmailType = EmailType.SentEmails,
+                                UniqueId = selectedEmail.UniqueId
                             });
                     }
                     else
@@ -755,7 +763,8 @@ namespace MailClient
                                     Body = selectedEmail.Body,
                                     Date = selectedEmail.ArrivalTime,
                                     CustomFolderName = selectedFolderName,
-                                    EmailType = EmailType.Inbox
+                                    EmailType = EmailType.Inbox,
+                                    UniqueId = selectedEmail.UniqueId
                                 });
                             MailReceiver.DeleteEmail(EmailType.Inbox, selectedEmail.UniqueId);
                         }
@@ -782,7 +791,8 @@ namespace MailClient
                                     Body = selectedEmail.Body,
                                     Date = selectedEmail.SentTime,
                                     CustomFolderName = selectedFolderName,
-                                    EmailType = EmailType.Inbox
+                                    EmailType = EmailType.Inbox,
+                                    UniqueId = selectedEmail.UniqueId
                                 });
                             MailReceiver.DeleteEmail(EmailType.SentEmails, selectedEmail.UniqueId);
                         }

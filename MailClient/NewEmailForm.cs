@@ -16,7 +16,21 @@ namespace MailClient
             _username = username;
             _password = password;
             InitializeComponent();
-            tbFrom.Text = username + "@yandex.ru";
+          
+            if (!username.Contains("@"))
+            {
+                if (parentForm.MailReceiver.Host.Contains("yandex"))
+                    tbFrom.Text = username + "@yandex.ru";
+                else
+                {
+                    tbFrom.Text = username + "@gmail.com";
+                }
+            }
+            else
+            {
+                tbFrom.Text = username;
+            }
+
             _parentForm = parentForm;
         }
         public void LoadFromMailPreview(string to, string subject, string body)

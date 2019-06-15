@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MailKit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +17,6 @@ namespace MailClient
         public DateTime Date { get; set; }
         public EmailType EmailType { get; set; }
         public string CustomFolderName { get; set; }
+        public UniqueId UniqueId { get; set; }
     }
 }
