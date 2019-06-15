@@ -41,10 +41,16 @@ namespace MailClient
                     CustomFolder customFolder;
                     _parentForm.FolderList.TryRemove(OldFolderName, out customFolder);
 
+                    foreach (var email in _parentForm.EmailCollection.Values)
+                    {
+                        if(email.CustomFolderName == OldFolderName)
+                        {
+                            email.CustomFolderName = FolderName;
+                        }
+                    }
+
                     folder.FolderName = FolderName;
                     _parentForm.FolderList.TryAdd(folder.FolderName, folder);
-                    
-                  
                 }
                 else
                 {
