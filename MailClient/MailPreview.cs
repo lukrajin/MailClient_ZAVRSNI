@@ -17,8 +17,13 @@ namespace MailClient
             tbSubject.Text = sentEmail.Subject;
             tbBody.Text = sentEmail.Body;
 
+            if (!string.IsNullOrEmpty(sentEmail.ToMimeMessage().HtmlBody))
+            {
+                webBrowserBody.DocumentText = sentEmail.ToMimeMessage().HtmlBody;
+                webBrowserBody.Visible = true;
+            }
 
-            lbArrivalTime.Text = "Sent Time: " + sentEmail.SentTime;
+            lbDate.Text = "Sent Time: " + sentEmail.SentTime;
 
             _parentForm.MailReceiver.SetMessageSeen(EmailType.SentEmails, sentEmail.UniqueId);
         }
@@ -32,8 +37,7 @@ namespace MailClient
             tbSubject.Text = collectionEmail.Subject;
             tbBody.Text = collectionEmail.Body;
 
-
-            lbArrivalTime.Text = "Date: " + collectionEmail.Date;
+            lbDate.Text = "Date: " + collectionEmail.Date;
         }
         public MailPreview(MailClientForm parentForm, InboxEmail inboxEmail)
         {
@@ -45,9 +49,15 @@ namespace MailClient
             tbSubject.Text = inboxEmail.Subject;
             tbBody.Text = inboxEmail.Body;
 
+            if (!string.IsNullOrEmpty(inboxEmail.ToMimeMessage().HtmlBody))
+            {
+                webBrowserBody.DocumentText = inboxEmail.ToMimeMessage().HtmlBody;
+                webBrowserBody.Visible = true;
+            }
 
-            lbArrivalTime.Text = "Arrival Time: " + inboxEmail.ArrivalTime;
+            lbDate.Text = "Arrival Time: " + inboxEmail.ArrivalTime;
             _parentForm.MailReceiver.SetMessageSeen(EmailType.Inbox, inboxEmail.UniqueId);
+
         }
 
         private void buttonForward_Click(object sender, EventArgs e)

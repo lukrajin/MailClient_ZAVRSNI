@@ -33,6 +33,7 @@ namespace MailClient
             btnLogin.Enabled = false;
             tbUsername.Enabled = false;
             tbPassword.Enabled = false;
+            comboBoxServer.Enabled = false;
             pictureBoxLoading.Visible = true;
 
             _parentForm.Size = new System.Drawing.Size(1118, 594);
@@ -79,6 +80,7 @@ namespace MailClient
                             this.Invoke((Action)(() => btnLogin.Enabled = true));
                             this.Invoke((Action)(() => tbUsername.Enabled = true));
                             this.Invoke((Action)(() => tbPassword.Enabled = true));
+                            this.Invoke((Action)(() => comboBoxServer.Enabled = true));
                             this.Invoke((Action)(() => pictureBoxLoading.Visible = false));
                             this.Invoke((Action)(() => MessageBox.Show(ex.Message, "Login Failed")));
                             _parentForm.Invoke((Action)(() => _parentForm.panelLoading.Visible = false));
@@ -97,6 +99,7 @@ namespace MailClient
                 this.Invoke((Action)(() => tbUsername.Enabled = true));
                 this.Invoke((Action)(() => tbPassword.Enabled = true));
                 this.Invoke((Action)(() => btnLogin.Enabled = true));
+                this.Invoke((Action)(() => comboBoxServer.Enabled = true));
                 _parentForm.Invoke((Action)(() => _parentForm.toolStripStatusLabel.Text = "Logged Out"));
                 _parentForm.Invoke((Action)(() => _parentForm.dataGridViewEmails.DataSource = null));
             });

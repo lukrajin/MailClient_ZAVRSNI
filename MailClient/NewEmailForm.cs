@@ -20,7 +20,7 @@ namespace MailClient
             _username = _parentForm.MailReceiver.Login;
             _password = _parentForm.MailReceiver.Password;
             InitializeComponent();
-          
+      
             if (!_username.Contains("@"))
             {
                 if (parentForm.MailReceiver.Host.Contains("yandex"))
