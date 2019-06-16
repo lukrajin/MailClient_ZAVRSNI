@@ -17,5 +17,14 @@ namespace MailClient
         public DateTime SentTime { get; set; }
         public UniqueId UniqueId { get; internal set; }
         public bool IsRead { get; internal set; }
+        private MimeKit.MimeMessage _mimeMessage;
+        public MimeKit.MimeMessage ToMimeMessage()
+        {
+            return _mimeMessage;
+        }
+        public void AttachMimeMessage(MimeKit.MimeMessage mimeMessage)
+        {
+            _mimeMessage = mimeMessage;
+        }
     }
 }

@@ -248,6 +248,7 @@ namespace MailClient
             toolStripButtonNewEmail.Enabled = enabled;
             toolStripButtonCollection.Enabled = enabled;
             toolStripButtonImportExport.Enabled = enabled;
+            toolStripButtonSearch.Enabled = enabled;
         }
 
         private int GetColumnIndexByName(string name)
@@ -808,6 +809,14 @@ namespace MailClient
             var selectedRow = dataGridViewEmails.Rows[dataGridViewEmails.SelectedRows[0].Index];
 
             LoadCustomFolderEmails((string)selectedRow.Cells[0].Value);
+        }
+
+        private void toolStripButtonSearch_Click(object sender, EventArgs e)
+        {
+            SearchForm searchForm = new SearchForm(this);
+            searchForm.StartPosition = FormStartPosition.Manual;
+            searchForm.Location = MousePosition;
+            searchForm.Show();
         }
     }
 

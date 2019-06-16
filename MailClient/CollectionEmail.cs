@@ -14,6 +14,7 @@ namespace MailClient
         public string To { get; set; }
         public string Subject { get; set; }
         public string Body { get; set; }
+  
         public DateTime Date { get; set; }
         public EmailType EmailType { get; set; }
         public string CustomFolderName { get; set; }

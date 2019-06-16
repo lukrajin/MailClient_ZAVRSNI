@@ -51,9 +51,9 @@ namespace MailClient
                 MessageBox.Show("Please provide valid parameters.", "Failed");
                 return;
             }
-            if(comboBoxImportFrom.Text =="Gmail" || comboBoxImportFrom.Text == "Yandex")
+            if (comboBoxImportFrom.Text == "Gmail" || comboBoxImportFrom.Text == "Yandex")
             {
-                if(comboBoxServerFolder.Text == "" || tbUsername.Text==""|| tbPassword.Text =="")
+                if (comboBoxServerFolder.Text == "" || tbUsername.Text == "" || tbPassword.Text == "")
                 {
                     MessageBox.Show("Please provide valid parameters.", "Failed");
                     return;
@@ -131,7 +131,7 @@ namespace MailClient
                 openFileDialog.Filter = "CSV files (*.csv)|*.txt|All files (*.*)|*.*";
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    if(!File.Exists(openFileDialog.FileName))
+                    if (!File.Exists(openFileDialog.FileName))
                     {
                         MessageBox.Show("Loading Failed", "File does not exists");
                         return;
@@ -147,13 +147,12 @@ namespace MailClient
                         this.Invoke((Action)(() => this.Close()));
                     });
                 }
-    
             }
         }
 
         private void buttonExport_Click(object sender, EventArgs e)
         {
-            if(comboBoxExportFrom.Text == "")
+            if (comboBoxExportFrom.Text == "")
             {
                 MessageBox.Show("Please provide valid parameters.", "Failed");
                 return;
@@ -178,14 +177,28 @@ namespace MailClient
                 case "Inbox":
                     {
                         sourceType = EmailType.Inbox;
-                        _importExportTool.ExportEmails(sourceType, folderBrowserDialog1.SelectedPath);
+
+                        Task.Run(() =>
+                        {
+                            this.Invoke((Action)(() => pictureBoxLoading.Visible = true));
+                            _importExportTool.ExportEmails(sourceType, folderBrowserDialog1.SelectedPath);
+                            this.Invoke((Action)(() => pictureBoxLoading.Visible = false));
+                            this.Invoke((Action)(() => this.Close()));
+                        });
                     }
                     break;
 
                 case "Sent Emails":
                     {
                         sourceType = EmailType.SentEmails;
-                        _importExportTool.ExportEmails(sourceType, folderBrowserDialog1.SelectedPath);
+
+                        Task.Run(() =>
+                        {
+                            this.Invoke((Action)(() => pictureBoxLoading.Visible = true));
+                            _importExportTool.ExportEmails(sourceType, folderBrowserDialog1.SelectedPath);
+                            this.Invoke((Action)(() => pictureBoxLoading.Visible = false));
+                            this.Invoke((Action)(() => this.Close()));
+                        });
                     }
                     break;
 
@@ -193,10 +206,16 @@ namespace MailClient
                     {
                         sourceType = EmailType.CollectionEmail;
                         _importExportTool.ExportEmails(sourceType, folderBrowserDialog1.SelectedPath, sourceFolderName);
+                        this.Close();
                     }
                     break;
             }
-            this.Close();
+        }
+
+        private void ImportExportEmailsForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            this.Hide();
         }
     }
 }

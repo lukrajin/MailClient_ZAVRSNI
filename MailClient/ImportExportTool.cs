@@ -274,24 +274,7 @@ namespace MailClient
             {
                 foreach (var email in _parentForm.ReceivedEmails.Values)
                 {
-                    var message = new MimeMessage();
-
-                    message.From.Add(new MailboxAddress(email.From));
-                    message.To.Add(new MailboxAddress(email.To));
-                    message.Subject = email.Subject;
-                    if (email.Body == null)
-                    {
-                        message.Body = new TextPart("plain")
-                        {
-                            Text = ""
-                        };
-                    }
-                    else
-                    {
-                        message.Body = new TextPart("plain") { Text = email.Body };
-                    }
-                    message.Date = email.ArrivalTime;
-                    message.MessageId = email.Id;
+                    var message = _parentForm.MailReceiver.GetEmail(EmailType.Inbox, email.UniqueId);
 
                     message.WriteTo(Path.Combine(path, email.Id + ".msg"));
                 }
@@ -300,24 +283,8 @@ namespace MailClient
             {
                 foreach (var email in _parentForm.SentEmails.Values)
                 {
-                    var message = new MimeMessage();
+                    var message=_parentForm.MailReceiver.GetEmail(EmailType.SentEmails, email.UniqueId);
 
-                    message.From.Add(new MailboxAddress(email.From));
-                    message.To.Add(new MailboxAddress(email.To));
-                    message.Subject = email.Subject;
-                    if (email.Body == null)
-                    {
-                        message.Body = new TextPart("plain")
-                        {
-                            Text = ""
-                        };
-                    }
-                    else
-                    {
-                        message.Body = new TextPart("plain") { Text = email.Body };
-                    }
-                    message.Date = email.SentTime;
-                    message.MessageId = email.Id;
 
                     message.WriteTo(Path.Combine(path, email.Id + ".msg"));
                 }
@@ -342,6 +309,7 @@ namespace MailClient
                         }
                         else
                         {
+                   
                             message.Body = new TextPart("plain") { Text = email.Body };
                         }
                         message.Date = email.Date;

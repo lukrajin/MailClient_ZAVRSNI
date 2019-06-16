@@ -67,7 +67,7 @@ namespace MailClient
             foreach (var item in items)
             {
                 var message = inbox.GetMessage(item.UniqueId);
-                mailMessages.TryAdd(message.MessageId, new InboxEmail
+                var inboxEmail = new InboxEmail
                 {
                     Id = message.MessageId,
                     ArrivalTime = message.Date.UtcDateTime,
@@ -77,7 +77,12 @@ namespace MailClient
                     Body = message.TextBody,
                     UniqueId = item.UniqueId,
                     IsRead = item.Flags.Value.HasFlag(MessageFlags.Seen)
-                });
+                };
+
+                inboxEmail.AttachMimeMessage(message);
+
+                mailMessages.TryAdd(message.MessageId, inboxEmail);
+                
             }
 
             return mailMessages;
@@ -140,7 +145,7 @@ namespace MailClient
             foreach (var item in items)
             {
                 var message = SentFolder.GetMessage(item.UniqueId);
-                mailMessages.TryAdd(message.MessageId, new SentEmail
+                var sentEmail = new SentEmail
                 {
                     Id = message.MessageId,
                     SentTime = message.Date.UtcDateTime,
@@ -150,7 +155,11 @@ namespace MailClient
                     Body = message.TextBody,
                     UniqueId = item.UniqueId,
                     IsRead = item.Flags.Value.HasFlag(MessageFlags.Seen)
-                });
+                };
+
+                sentEmail.AttachMimeMessage(message);
+
+                mailMessages.TryAdd(message.MessageId, sentEmail);
             }
 
             return mailMessages;

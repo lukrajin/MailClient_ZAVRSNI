@@ -115,6 +115,12 @@
     <Compile Include="MailClientForm.designer.cs">
       <DependentUpon>MailClientForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SearchForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SearchForm.Designer.cs">
+      <DependentUpon>SearchForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SentEmail.cs" />
     <Compile Include="ServerInfo.cs" />
     <EmbeddedResource Include="FolderEdit.resx">
@@ -144,6 +150,9 @@
     </Compile>
     <EmbeddedResource Include="MailClientForm.resx">
       <DependentUpon>MailClientForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SearchForm.resx">
+      <DependentUpon>SearchForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
