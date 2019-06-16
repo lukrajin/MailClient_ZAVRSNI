@@ -384,7 +384,7 @@ namespace MailClient
         {
             if (MailReceiver != null)
             {
-                newEmailForm = new NewEmailForm(this, MailReceiver.Login, MailReceiver.Password);
+                newEmailForm = new NewEmailForm(this);
                 newEmailForm.StartPosition = FormStartPosition.Manual;
                 newEmailForm.Location = MousePosition;
                 newEmailForm.Show();

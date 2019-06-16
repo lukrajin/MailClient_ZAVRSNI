@@ -53,7 +53,7 @@ namespace MailClient
         private void buttonForward_Click(object sender, EventArgs e)
         {
 
-            var newEmailForm = new NewEmailForm(_parentForm, _parentForm.MailReceiver.Login, _parentForm.MailReceiver.Password);
+            var newEmailForm = new NewEmailForm(_parentForm);
             newEmailForm.LoadFromMailPreview("", "FWD: " + tbSubject.Text, tbBody.Text);
             newEmailForm.StartPosition = FormStartPosition.Manual;
             newEmailForm.Location = this.Location;
@@ -64,7 +64,7 @@ namespace MailClient
 
         private void buttonReply_Click(object sender, EventArgs e)
         {
-            var newEmailForm = new NewEmailForm(_parentForm, _parentForm.MailReceiver.Login, _parentForm.MailReceiver.Password);
+            var newEmailForm = new NewEmailForm(_parentForm);
             var body = tbBody.Text;
             newEmailForm.LoadFromMailPreview(
                 tbTo.Text, "Reply: " + tbSubject.Text, "---ORIGINAL MESSAGE----\n" + body + "---ORIGINAL MESSAGE----\n");

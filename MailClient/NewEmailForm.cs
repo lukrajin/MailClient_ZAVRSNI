@@ -10,28 +10,43 @@ namespace MailClient
         private string _username;
         private string _password;
         private MailClientForm _parentForm;
+        private string _host;
+        private int _port;
 
-        public NewEmailForm(MailClientForm parentForm, string username, string password)
+        public NewEmailForm(MailClientForm parentForm)
         {
-            _username = username;
-            _password = password;
+            _parentForm = parentForm;
+
+            _username = _parentForm.MailReceiver.Login;
+            _password = _parentForm.MailReceiver.Password;
             InitializeComponent();
           
-            if (!username.Contains("@"))
+            if (!_username.Contains("@"))
             {
                 if (parentForm.MailReceiver.Host.Contains("yandex"))
-                    tbFrom.Text = username + "@yandex.ru";
+                {
+                    tbFrom.Text = _username + "@yandex.ru";
+                }
                 else
                 {
-                    tbFrom.Text = username + "@gmail.com";
+                    tbFrom.Text = _username + "@gmail.com";
                 }
             }
             else
             {
-                tbFrom.Text = username;
+                tbFrom.Text = _username;
             }
 
-            _parentForm = parentForm;
+            if (parentForm.MailReceiver.Host.Contains("yandex"))
+            {
+                _host = ServerInfo.Yandex.SmtpServer;
+                _port = ServerInfo.Yandex.SmtpPort;
+            }
+            else
+            {
+                _host = ServerInfo.Gmail.SmtpServer;
+                _port = ServerInfo.Gmail.SmtpPort;
+            }
         }
         public void LoadFromMailPreview(string to, string subject, string body)
         {
@@ -48,7 +63,7 @@ namespace MailClient
             {
                 try
                 {
-                    var mailSender = new MailSender("smtp.yandex.com", 465, true, _username, _password);
+                    var mailSender = new MailSender(_host, _port, true, _username, _password);
                     mailSender.Connect();
                     var sentEmail = mailSender.Send(tbFrom.Text, tbTo.Text, tbSubject.Text, tbBody.Text);
 
