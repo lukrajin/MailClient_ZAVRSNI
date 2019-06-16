@@ -1,23 +1,20 @@
-﻿using System;
+﻿using MailKit;
+using MailKit.Net.Imap;
+using MimeKit;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
-using MailKit;
-using MailKit.Net.Imap;
-using MailKit.Search;
-using MimeKit;
 
 namespace MailClient
 {
     public class MailReceiver
     {
-        static string[] CommonSentFolderNames = {"sent", "Sent",
-            "Sent Items", "Sent Mail" ,"Sent Email", "Poslano", "sent-items", "sent-email", "sent-mail" };
-        ImapClient client = new ImapClient();
+        private static string[] CommonSentFolderNames = {"sent", "Sent",
+            "Sent Items", "Sent Mail","Sent Email", "Poslano", "sent-items", "sent-email", "sent-mail"};
+
+        private ImapClient client = new ImapClient();
         private string mailServer;
+
         public string Host
         {
             get
@@ -25,6 +22,7 @@ namespace MailClient
                 return mailServer;
             }
         }
+
         private int port;
         private bool ssl;
         public string Login { get; set; }
@@ -52,10 +50,12 @@ namespace MailClient
 
             client.Authenticate(Login, Password);
         }
+
         public void Disconnect()
         {
             client.Disconnect(true);
         }
+
         public ConcurrentDictionary<string, InboxEmail> GetInboxEmailList()
         {
             var mailMessages = new ConcurrentDictionary<string, InboxEmail>();
@@ -66,20 +66,58 @@ namespace MailClient
 
             foreach (var item in items)
             {
- 
                 var message = inbox.GetMessage(item.UniqueId);
                 mailMessages.TryAdd(message.MessageId, new InboxEmail
                 {
-                    Id= message.MessageId,
+                    Id = message.MessageId,
                     ArrivalTime = message.Date.UtcDateTime,
                     From = ((MailboxAddress)message.From[0]).Address,
                     To = ((MailboxAddress)message.To[0]).Address,
                     Subject = message.Subject,
-                    Body =message.TextBody,
+                    Body = message.TextBody,
                     UniqueId = item.UniqueId,
                     IsRead = item.Flags.Value.HasFlag(MessageFlags.Seen)
-
                 });
+            }
+
+            return mailMessages;
+        }
+
+        public List<MimeMessage> GetInboxMimeMessages()
+        {
+            var mailMessages = new List<MimeMessage>();
+            var inbox = client.Inbox;
+            inbox.Open(FolderAccess.ReadWrite);
+
+            var items = inbox.Fetch(UniqueIdRange.All, MessageSummaryItems.Flags);
+
+            foreach (var item in items)
+            {
+                var message = inbox.GetMessage(item.UniqueId);
+                mailMessages.Add(message);
+            }
+
+            return mailMessages;
+        }
+        public List<MimeMessage> GetSentMimeMessages()
+        {
+            var mailMessages = new List<MimeMessage>();
+
+            SentFolder = GetSentEmailsFolder();
+
+            if (SentFolder == null)
+                SentFolder = client.GetFolder(SpecialFolder.Sent);
+            if (SentFolder == null)
+                return mailMessages;
+
+            SentFolder.Open(FolderAccess.ReadWrite);
+
+            var items = SentFolder.Fetch(UniqueIdRange.All, MessageSummaryItems.Flags);
+
+            foreach (var item in items)
+            {
+                var message = SentFolder.GetMessage(item.UniqueId);
+                mailMessages.Add(message);
             }
 
             return mailMessages;
@@ -88,7 +126,7 @@ namespace MailClient
         public ConcurrentDictionary<string, SentEmail> GetSentEmailList()
         {
             var mailMessages = new ConcurrentDictionary<string, SentEmail>();
-            
+
             SentFolder = GetSentEmailsFolder();
 
             if (SentFolder == null)
@@ -98,7 +136,6 @@ namespace MailClient
 
             SentFolder.Open(FolderAccess.ReadWrite);
             var items = SentFolder.Fetch(UniqueIdRange.All, MessageSummaryItems.Flags);
-  
 
             foreach (var item in items)
             {
@@ -128,7 +165,7 @@ namespace MailClient
 
         public void DeleteEmail(EmailType emailType, UniqueId uniqueId)
         {
-            if(emailType== EmailType.Inbox)
+            if (emailType == EmailType.Inbox)
             {
                 if (!client.Inbox.IsOpen)
                     client.Inbox.Open(FolderAccess.ReadWrite);
@@ -136,7 +173,7 @@ namespace MailClient
                 client.Inbox.AddFlags(uniqueId, MessageFlags.Deleted, true);
                 client.Inbox.Expunge();
             }
-            else if(emailType == EmailType.SentEmails)
+            else if (emailType == EmailType.SentEmails)
             {
                 if (!SentFolder.IsOpen)
                     SentFolder.Open(FolderAccess.ReadWrite);
@@ -145,6 +182,7 @@ namespace MailClient
                 SentFolder.Expunge();
             }
         }
+
         public void SetMessageSeen(EmailType emailType, UniqueId uniqueId)
         {
             if (emailType == EmailType.Inbox)
@@ -180,6 +218,7 @@ namespace MailClient
                 SentFolder.Append(mimeMessage);
             }
         }
+
         public MimeMessage GetEmail(EmailType emailType, UniqueId uniqueId)
         {
             if (emailType == EmailType.Inbox)
@@ -189,7 +228,7 @@ namespace MailClient
 
                 return client.Inbox.GetMessage(uniqueId);
             }
-            else if(emailType == EmailType.SentEmails)
+            else if (emailType == EmailType.SentEmails)
             {
                 if (!SentFolder.IsOpen)
                     SentFolder.Open(FolderAccess.ReadWrite);

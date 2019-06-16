@@ -35,7 +35,7 @@ namespace MailClient
             InitializeComponent();
             ImportExportTool = new ImportExportTool(this);
 
-            EmailCollection = ImportExportTool.LoadCollection(true);
+            EmailCollection = ImportExportTool.LoadCollection(ImportExportTool.GetEmailsPath(EmailType.CollectionEmail));
             if (EmailCollection == null)
                 EmailCollection = new ConcurrentDictionary<string, CollectionEmail>();
 
@@ -463,7 +463,7 @@ namespace MailClient
         {
             if (MailReceiver != null)
             {
-                ImportExportTool.ExportEmails(EmailType.CollectionEmail, true);
+                ImportExportTool.ExportEmails(EmailType.CollectionEmail);
                 ImportExportTool.ExportFolderList();
             }
         }

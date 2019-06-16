@@ -31,28 +31,28 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImportExportEmailsForm));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.label1 = new System.Windows.Forms.Label();
-            this.comboBoxImportFrom = new System.Windows.Forms.ComboBox();
-            this.labelFolder = new System.Windows.Forms.Label();
-            this.comboBoxServerFolder = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.comboBoxImportTo = new System.Windows.Forms.ComboBox();
+            this.pictureBoxLoading = new System.Windows.Forms.PictureBox();
+            this.buttonImport = new System.Windows.Forms.Button();
             this.groupBoxCredentials = new System.Windows.Forms.GroupBox();
             this.tbPassword = new System.Windows.Forms.TextBox();
             this.tbUsername = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.comboBox4 = new System.Windows.Forms.ComboBox();
+            this.comboBoxImportTo = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.comboBoxServerFolder = new System.Windows.Forms.ComboBox();
+            this.labelFolder = new System.Windows.Forms.Label();
+            this.comboBoxImportFrom = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.buttonExport = new System.Windows.Forms.Button();
+            this.comboBoxExportFrom = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
-            this.pictureBoxLoading = new System.Windows.Forms.PictureBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.groupBoxCredentials.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLoading)).BeginInit();
+            this.groupBoxCredentials.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -68,7 +68,7 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.pictureBoxLoading);
-            this.tabPage1.Controls.Add(this.button1);
+            this.tabPage1.Controls.Add(this.buttonImport);
             this.tabPage1.Controls.Add(this.groupBoxCredentials);
             this.tabPage1.Controls.Add(this.comboBoxImportTo);
             this.tabPage1.Controls.Add(this.label3);
@@ -84,84 +84,25 @@
             this.tabPage1.Text = "Import";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
+            // pictureBoxLoading
             // 
-            this.tabPage2.Controls.Add(this.button2);
-            this.tabPage2.Controls.Add(this.comboBox4);
-            this.tabPage2.Controls.Add(this.label6);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(463, 404);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Export";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.pictureBoxLoading.Image = global::MailClient.Properties.Resources.loading;
+            this.pictureBoxLoading.Location = new System.Drawing.Point(20, 356);
+            this.pictureBoxLoading.Name = "pictureBoxLoading";
+            this.pictureBoxLoading.Size = new System.Drawing.Size(42, 40);
+            this.pictureBoxLoading.TabIndex = 8;
+            this.pictureBoxLoading.TabStop = false;
+            this.pictureBoxLoading.Visible = false;
             // 
-            // label1
+            // buttonImport
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(17, 38);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(62, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Import from:";
-            // 
-            // comboBoxImportFrom
-            // 
-            this.comboBoxImportFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxImportFrom.FormattingEnabled = true;
-            this.comboBoxImportFrom.Items.AddRange(new object[] {
-            "Gmail",
-            "Yandex",
-            "File"});
-            this.comboBoxImportFrom.Location = new System.Drawing.Point(85, 34);
-            this.comboBoxImportFrom.Name = "comboBoxImportFrom";
-            this.comboBoxImportFrom.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxImportFrom.TabIndex = 1;
-            this.comboBoxImportFrom.SelectedIndexChanged += new System.EventHandler(this.comboBoxImportFrom_SelectedIndexChanged);
-            // 
-            // labelFolder
-            // 
-            this.labelFolder.AutoSize = true;
-            this.labelFolder.Location = new System.Drawing.Point(227, 38);
-            this.labelFolder.Name = "labelFolder";
-            this.labelFolder.Size = new System.Drawing.Size(36, 13);
-            this.labelFolder.TabIndex = 2;
-            this.labelFolder.Text = "folder:";
-            // 
-            // comboBoxServerFolder
-            // 
-            this.comboBoxServerFolder.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxServerFolder.FormattingEnabled = true;
-            this.comboBoxServerFolder.Items.AddRange(new object[] {
-            "Inbox",
-            "Sent Emails"});
-            this.comboBoxServerFolder.Location = new System.Drawing.Point(269, 34);
-            this.comboBoxServerFolder.Name = "comboBoxServerFolder";
-            this.comboBoxServerFolder.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxServerFolder.TabIndex = 3;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(20, 75);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(51, 13);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Import to:";
-            // 
-            // comboBoxImportTo
-            // 
-            this.comboBoxImportTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxImportTo.FormattingEnabled = true;
-            this.comboBoxImportTo.Items.AddRange(new object[] {
-            "Gmail",
-            "Yandex",
-            "File"});
-            this.comboBoxImportTo.Location = new System.Drawing.Point(85, 72);
-            this.comboBoxImportTo.Name = "comboBoxImportTo";
-            this.comboBoxImportTo.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxImportTo.TabIndex = 5;
+            this.buttonImport.Location = new System.Drawing.Point(349, 361);
+            this.buttonImport.Name = "buttonImport";
+            this.buttonImport.Size = new System.Drawing.Size(108, 35);
+            this.buttonImport.TabIndex = 7;
+            this.buttonImport.Text = "Import";
+            this.buttonImport.UseVisualStyleBackColor = true;
+            this.buttonImport.Click += new System.EventHandler(this.buttonImport_Click);
             // 
             // groupBoxCredentials
             // 
@@ -216,23 +157,99 @@
             this.label5.TabIndex = 4;
             this.label5.Text = "Username:";
             // 
-            // button1
+            // comboBoxImportTo
             // 
-            this.button1.Location = new System.Drawing.Point(349, 361);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(108, 35);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "Import";
-            this.button1.UseVisualStyleBackColor = true;
+            this.comboBoxImportTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxImportTo.FormattingEnabled = true;
+            this.comboBoxImportTo.Location = new System.Drawing.Point(85, 72);
+            this.comboBoxImportTo.Name = "comboBoxImportTo";
+            this.comboBoxImportTo.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxImportTo.TabIndex = 5;
             // 
-            // comboBox4
+            // label3
             // 
-            this.comboBox4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Location = new System.Drawing.Point(82, 18);
-            this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(121, 21);
-            this.comboBox4.TabIndex = 3;
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(20, 75);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(51, 13);
+            this.label3.TabIndex = 4;
+            this.label3.Text = "Import to:";
+            // 
+            // comboBoxServerFolder
+            // 
+            this.comboBoxServerFolder.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxServerFolder.FormattingEnabled = true;
+            this.comboBoxServerFolder.Items.AddRange(new object[] {
+            "Inbox",
+            "Sent Emails"});
+            this.comboBoxServerFolder.Location = new System.Drawing.Point(269, 34);
+            this.comboBoxServerFolder.Name = "comboBoxServerFolder";
+            this.comboBoxServerFolder.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxServerFolder.TabIndex = 3;
+            // 
+            // labelFolder
+            // 
+            this.labelFolder.AutoSize = true;
+            this.labelFolder.Location = new System.Drawing.Point(227, 38);
+            this.labelFolder.Name = "labelFolder";
+            this.labelFolder.Size = new System.Drawing.Size(36, 13);
+            this.labelFolder.TabIndex = 2;
+            this.labelFolder.Text = "folder:";
+            // 
+            // comboBoxImportFrom
+            // 
+            this.comboBoxImportFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxImportFrom.FormattingEnabled = true;
+            this.comboBoxImportFrom.Items.AddRange(new object[] {
+            "Gmail",
+            "Yandex",
+            "File"});
+            this.comboBoxImportFrom.Location = new System.Drawing.Point(85, 34);
+            this.comboBoxImportFrom.Name = "comboBoxImportFrom";
+            this.comboBoxImportFrom.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxImportFrom.TabIndex = 1;
+            this.comboBoxImportFrom.SelectedIndexChanged += new System.EventHandler(this.comboBoxImportFrom_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(17, 38);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(62, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Import from:";
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.buttonExport);
+            this.tabPage2.Controls.Add(this.comboBoxExportFrom);
+            this.tabPage2.Controls.Add(this.label6);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(463, 404);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Export";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // buttonExport
+            // 
+            this.buttonExport.Location = new System.Drawing.Point(349, 361);
+            this.buttonExport.Name = "buttonExport";
+            this.buttonExport.Size = new System.Drawing.Size(108, 35);
+            this.buttonExport.TabIndex = 8;
+            this.buttonExport.Text = "Export";
+            this.buttonExport.UseVisualStyleBackColor = true;
+            this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
+            // 
+            // comboBoxExportFrom
+            // 
+            this.comboBoxExportFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxExportFrom.FormattingEnabled = true;
+            this.comboBoxExportFrom.Location = new System.Drawing.Point(82, 18);
+            this.comboBoxExportFrom.Name = "comboBoxExportFrom";
+            this.comboBoxExportFrom.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxExportFrom.TabIndex = 3;
             // 
             // label6
             // 
@@ -243,25 +260,6 @@
             this.label6.TabIndex = 2;
             this.label6.Text = "Export from:";
             // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(349, 361);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(108, 35);
-            this.button2.TabIndex = 8;
-            this.button2.Text = "Export";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // pictureBoxLoading
-            // 
-            this.pictureBoxLoading.Image = global::MailClient.Properties.Resources.loading;
-            this.pictureBoxLoading.Location = new System.Drawing.Point(20, 356);
-            this.pictureBoxLoading.Name = "pictureBoxLoading";
-            this.pictureBoxLoading.Size = new System.Drawing.Size(42, 40);
-            this.pictureBoxLoading.TabIndex = 8;
-            this.pictureBoxLoading.TabStop = false;
-            this.pictureBoxLoading.Visible = false;
-            // 
             // ImportExportEmailsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -269,17 +267,19 @@
             this.ClientSize = new System.Drawing.Size(477, 433);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximumSize = new System.Drawing.Size(493, 472);
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(493, 472);
             this.Name = "ImportExportEmailsForm";
             this.Text = "Import/Export Emails";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLoading)).EndInit();
             this.groupBoxCredentials.ResumeLayout(false);
             this.groupBoxCredentials.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLoading)).EndInit();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -296,13 +296,13 @@
         private System.Windows.Forms.Label labelFolder;
         private System.Windows.Forms.ComboBox comboBoxImportFrom;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonImport;
         private System.Windows.Forms.TextBox tbPassword;
         private System.Windows.Forms.TextBox tbUsername;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.ComboBox comboBox4;
+        private System.Windows.Forms.Button buttonExport;
+        private System.Windows.Forms.ComboBox comboBoxExportFrom;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.PictureBox pictureBoxLoading;
     }
