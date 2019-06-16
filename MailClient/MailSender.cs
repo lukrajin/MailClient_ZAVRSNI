@@ -29,14 +29,11 @@ namespace MailClient
         public MimeMessage Send(string from, string to, string subject, string body)
         {
             var message = new MimeMessage();
-            var bodyBuilder = new BodyBuilder();
-            bodyBuilder.HtmlBody = body;
-            bodyBuilder.TextBody = body;
 
             message.From.Add(new MailboxAddress(from));
             message.To.Add(new MailboxAddress(to));
             message.Subject = subject;
-            message.Body = bodyBuilder.ToMessageBody();
+            message.Body = new TextPart { Text = body };
 
             client.Send(message);
 
