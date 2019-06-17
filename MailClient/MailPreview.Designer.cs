@@ -135,12 +135,12 @@
             this.tbFrom.Size = new System.Drawing.Size(695, 25);
             this.tbFrom.TabIndex = 7;
             // 
-            // lbArrivalTime
+            // lbDate
             // 
             this.lbDate.AutoSize = true;
             this.lbDate.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.lbDate.Location = new System.Drawing.Point(13, 9);
-            this.lbDate.Name = "lbArrivalTime";
+            this.lbDate.Name = "lbDate";
             this.lbDate.Size = new System.Drawing.Size(92, 20);
             this.lbDate.TabIndex = 8;
             this.lbDate.Text = "Arrival Time:";

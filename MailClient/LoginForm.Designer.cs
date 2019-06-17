@@ -70,7 +70,7 @@
             this.tbUsername.Location = new System.Drawing.Point(119, 120);
             this.tbUsername.Name = "tbUsername";
             this.tbUsername.Size = new System.Drawing.Size(362, 29);
-            this.tbUsername.TabIndex = 2;
+            this.tbUsername.TabIndex = 1;
             // 
             // tbPassword
             // 
@@ -79,7 +79,7 @@
             this.tbPassword.Location = new System.Drawing.Point(119, 167);
             this.tbPassword.Name = "tbPassword";
             this.tbPassword.Size = new System.Drawing.Size(362, 29);
-            this.tbPassword.TabIndex = 3;
+            this.tbPassword.TabIndex = 2;
             this.tbPassword.UseSystemPasswordChar = true;
             // 
             // btnLogin
@@ -133,12 +133,12 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.White;
+            this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(130)))), ((int)(((byte)(222)))));
             this.pictureBox1.ErrorImage = null;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(-7, -5);
+            this.pictureBox1.Image = global::MailClient.Properties.Resources.logo;
+            this.pictureBox1.Location = new System.Drawing.Point(-10, -51);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(504, 103);
+            this.pictureBox1.Size = new System.Drawing.Size(504, 151);
             this.pictureBox1.TabIndex = 7;
             this.pictureBox1.TabStop = false;
             // 
@@ -170,7 +170,8 @@
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(395, 213);
+            this.MaximumSize = new System.Drawing.Size(510, 355);
+            this.MinimumSize = new System.Drawing.Size(510, 355);
             this.Name = "LoginForm";
             this.Text = "Login";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LoginForm_FormClosing);

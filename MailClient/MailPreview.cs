@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MimeKit;
+using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace MailClient

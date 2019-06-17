@@ -212,6 +212,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="email.ico" />
+    <None Include="logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
