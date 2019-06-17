@@ -67,12 +67,25 @@ namespace MailClient
             foreach (var item in items)
             {
                 var message = inbox.GetMessage(item.UniqueId);
+
+                var fromAddresses = new List<string>();
+                foreach (var address in message.From)
+                {
+                    fromAddresses.Add(((MailboxAddress)address).Address);
+                }
+
+                var toAddresses = new List<string>();
+                foreach (var address in message.To)
+                {
+                    toAddresses.Add(((MailboxAddress)address).Address);
+                }
+
                 var inboxEmail = new InboxEmail
                 {
                     Id = message.MessageId,
                     ArrivalTime = message.Date.UtcDateTime,
-                    From = ((MailboxAddress)message.From[0]).Address,
-                    To = ((MailboxAddress)message.To[0]).Address,
+                    From = string.Join(";", fromAddresses),
+                    To = string.Join(";", toAddresses),
                     Subject = message.Subject,
                     Body = message.TextBody,
                     UniqueId = item.UniqueId,
@@ -145,12 +158,25 @@ namespace MailClient
             foreach (var item in items)
             {
                 var message = SentFolder.GetMessage(item.UniqueId);
+
+                var fromAddresses = new List<string>();
+                foreach(var address in message.From)
+                {
+                    fromAddresses.Add(((MailboxAddress)address).Address);
+                }
+
+                var toAddresses = new List<string>();
+                foreach (var address in message.To)
+                {
+                    toAddresses.Add(((MailboxAddress)address).Address);
+                }
+
                 var sentEmail = new SentEmail
                 {
                     Id = message.MessageId,
                     SentTime = message.Date.UtcDateTime,
-                    From = ((MailboxAddress)message.From[0]).Address,
-                    To = ((MailboxAddress)message.To[0]).Address,
+                    From = string.Join(";", fromAddresses),
+                    To = string.Join(";", toAddresses),
                     Subject = message.Subject,
                     Body = message.TextBody,
                     UniqueId = item.UniqueId,

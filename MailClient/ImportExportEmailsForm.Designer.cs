@@ -203,7 +203,7 @@
             this.comboBoxImportFrom.Items.AddRange(new object[] {
             "Gmail",
             "Yandex",
-            "File"});
+            "Folder"});
             this.comboBoxImportFrom.Location = new System.Drawing.Point(85, 34);
             this.comboBoxImportFrom.Name = "comboBoxImportFrom";
             this.comboBoxImportFrom.Size = new System.Drawing.Size(121, 21);

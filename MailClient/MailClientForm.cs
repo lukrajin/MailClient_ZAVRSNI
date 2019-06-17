@@ -99,8 +99,8 @@ namespace MailClient
 
                         messages.Rows.Add(email.Id, image
                              ,
-                            email.ArrivalTime, email.From, email.To,
-                            email.Subject, CreateBodyPreview(email.Body, 30)
+                            email.ArrivalTime, CreateShortText(email.From, 40), CreateShortText(email.To, 40),
+                            email.Subject, CreateShortText(email.Body, 40)
                             );
                     }
                 }
@@ -132,8 +132,8 @@ namespace MailClient
 
                         messages.Rows.Add(email.Id,
                             image,
-                            email.SentTime, email.From, email.To,
-                            email.Subject, CreateBodyPreview(email.Body, 30));
+                            email.SentTime, CreateShortText(email.From, 40), CreateShortText(email.To, 40),
+                            email.Subject, CreateShortText(email.Body, 40));
                     }
                 }
                 else
@@ -199,7 +199,7 @@ namespace MailClient
 
             messages.Columns.Add("Id", typeof(string));
             messages.Columns.Add("Date", typeof(string));
-            messages.Columns.Add("Email Type", typeof(string));
+            messages.Columns.Add("Original Folder", typeof(string));
             messages.Columns.Add("From", typeof(string));
             messages.Columns.Add("To", typeof(string));
             messages.Columns.Add("Subject", typeof(string));
@@ -207,8 +207,9 @@ namespace MailClient
 
             foreach (var email in currentCustomFolderItemList.Values)
             {
-                messages.Rows.Add(email.Id, email.Date, email.EmailType.ToString(), email.From, email.To,
-                    email.Subject, CreateBodyPreview(email.Body, 30));
+                messages.Rows.Add(email.Id, email.Date, email.OriginalFolder.ToString(), 
+                    CreateShortText(email.From, 40), CreateShortText(email.To, 40),
+                    email.Subject, CreateShortText(email.TextBody, 40));
             }
 
             if (dataGridViewEmails.InvokeRequired)
@@ -368,18 +369,19 @@ namespace MailClient
             }
         }
 
-        public static string CreateBodyPreview(string body, int maxLength)
+        public static string CreateShortText(string text, int maxLength)
         {
-            if (string.IsNullOrEmpty(body))
-                return body;
+            if (string.IsNullOrEmpty(text))
+                return text;
 
-            var shortBody = body.Substring(0, Math.Min(body.Length, maxLength));
+            var shortBody = text.Substring(0, Math.Min(text.Length, maxLength));
 
-            if (shortBody.Count() != body.Count())
+            if (shortBody.Count() != text.Count())
                 return shortBody.Substring(0, shortBody.Length - 3) + "...";
             else
-                return body;
+                return text;
         }
+     
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
@@ -525,7 +527,6 @@ namespace MailClient
                         --FolderList[OpenedCustomFolderName].ItemCount;
                         EmailCollection.TryRemove(selectedEmail.Id, out collectionEmail);
                     }
-                    toolStripButtonRefresh.PerformClick();
                 }
                 else
                 {
@@ -546,8 +547,8 @@ namespace MailClient
                             SentEmails.TryRemove(selectedEmail.Id, out sentEmail);
                         }
                     }
-                    toolStripButtonRefresh.PerformClick();
                 }
+                this.Invoke((Action)(() => toolStripButtonRefresh.PerformClick()));
             });
         }
 
@@ -603,10 +604,11 @@ namespace MailClient
                                 From = selectedEmail.From,
                                 To = selectedEmail.To,
                                 Subject = selectedEmail.Subject,
-                                Body = selectedEmail.Body,
+                                TextBody = selectedEmail.Body,
+                                HtmlBody = selectedEmail.ToMimeMessage().HtmlBody,
                                 Date = selectedEmail.ArrivalTime,
                                 CustomFolderName = selectedFolderId,
-                                EmailType = EmailType.Inbox,
+                                OriginalFolder = EmailType.Inbox,
                                 UniqueId = selectedEmail.UniqueId
                             });
                     }
@@ -624,10 +626,11 @@ namespace MailClient
                                 From = selectedEmail.From,
                                 To = selectedEmail.To,
                                 Subject = selectedEmail.Subject,
-                                Body = selectedEmail.Body,
+                                TextBody = selectedEmail.Body,
+                                HtmlBody = selectedEmail.ToMimeMessage().HtmlBody,
                                 Date = selectedEmail.SentTime,
                                 CustomFolderName = selectedFolderId,
-                                EmailType = EmailType.SentEmails,
+                                OriginalFolder = EmailType.SentEmails,
                                 UniqueId = selectedEmail.UniqueId
                             });
                     }
@@ -641,7 +644,7 @@ namespace MailClient
                             message.From.Add(new MailboxAddress(selectedEmail.From));
                             message.To.Add(new MailboxAddress(selectedEmail.To));
                             message.Subject = selectedEmail.Subject;
-                            message.Body = new TextPart("plain") { Text = selectedEmail.Body };
+                            message.Body = new TextPart("plain") { Text = selectedEmail.TextBody };
                             message.Date = selectedEmail.Date;
 
                             MailReceiver.AddMessageToFolder(EmailType.SentEmails, message);
@@ -654,7 +657,7 @@ namespace MailClient
                             message.From.Add(new MailboxAddress(selectedEmail.From));
                             message.To.Add(new MailboxAddress(selectedEmail.To));
                             message.Subject = selectedEmail.Subject;
-                            message.Body = new TextPart("plain") { Text = selectedEmail.Body };
+                            message.Body = new TextPart("plain") { Text = selectedEmail.TextBody };
                             message.Date = selectedEmail.Date;
 
                             MailReceiver.AddMessageToFolder(EmailType.Inbox, message);
@@ -662,7 +665,7 @@ namespace MailClient
                     }
                 }
 
-                toolStripButtonRefresh.PerformClick();
+                this.Invoke((Action)(()=>toolStripButtonRefresh.PerformClick()));
             });
         }
 
@@ -703,7 +706,7 @@ namespace MailClient
                             message.From.Add(new MailboxAddress(selectedEmail.From));
                             message.To.Add(new MailboxAddress(selectedEmail.To));
                             message.Subject = selectedEmail.Subject;
-                            message.Body = new TextPart("plain") { Text = selectedEmail.Body };
+                            message.Body = new TextPart("plain") { Text = selectedEmail.TextBody };
                             message.Date = selectedEmail.Date;
 
                             MailReceiver.AddMessageToFolder(EmailType.SentEmails, message);
@@ -718,7 +721,7 @@ namespace MailClient
                             message.From.Add(new MailboxAddress(selectedEmail.From));
                             message.To.Add(new MailboxAddress(selectedEmail.To));
                             message.Subject = selectedEmail.Subject;
-                            message.Body = new TextPart("plain") { Text = selectedEmail.Body };
+                            message.Body = new TextPart("plain") { Text = selectedEmail.TextBody };
                             message.Date = selectedEmail.Date;
 
                             MailReceiver.AddMessageToFolder(EmailType.Inbox, message);
@@ -761,10 +764,11 @@ namespace MailClient
                                     From = selectedEmail.From,
                                     To = selectedEmail.To,
                                     Subject = selectedEmail.Subject,
-                                    Body = selectedEmail.Body,
+                                    TextBody = selectedEmail.Body,
+                                    HtmlBody = selectedEmail.ToMimeMessage().HtmlBody,
                                     Date = selectedEmail.ArrivalTime,
                                     CustomFolderName = selectedFolderName,
-                                    EmailType = EmailType.Inbox,
+                                    OriginalFolder = EmailType.Inbox,
                                     UniqueId = selectedEmail.UniqueId
                                 });
                             MailReceiver.DeleteEmail(EmailType.Inbox, selectedEmail.UniqueId);
@@ -789,10 +793,11 @@ namespace MailClient
                                     From = selectedEmail.From,
                                     To = selectedEmail.To,
                                     Subject = selectedEmail.Subject,
-                                    Body = selectedEmail.Body,
+                                    TextBody = selectedEmail.Body,
+                                    HtmlBody = selectedEmail.ToMimeMessage().HtmlBody,
                                     Date = selectedEmail.SentTime,
                                     CustomFolderName = selectedFolderName,
-                                    EmailType = EmailType.Inbox,
+                                    OriginalFolder = EmailType.Inbox,
                                     UniqueId = selectedEmail.UniqueId
                                 });
                             MailReceiver.DeleteEmail(EmailType.SentEmails, selectedEmail.UniqueId);
@@ -800,7 +805,7 @@ namespace MailClient
                     }
                 }
 
-                toolStripButtonRefresh.PerformClick();
+                this.Invoke((Action)(() => toolStripButtonRefresh.PerformClick()));
             });
         }
 

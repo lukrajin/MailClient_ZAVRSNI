@@ -32,10 +32,17 @@ namespace MailClient
             InitializeComponent();
 
             _parentForm = parentForm;
+
             tbFrom.Text = collectionEmail.From;
             tbTo.Text = collectionEmail.To;
             tbSubject.Text = collectionEmail.Subject;
-            tbBody.Text = collectionEmail.Body;
+            tbBody.Text = collectionEmail.TextBody;
+
+            if (!string.IsNullOrEmpty(collectionEmail.HtmlBody))
+            {
+                webBrowserBody.DocumentText = collectionEmail.HtmlBody;
+                webBrowserBody.Visible = true;
+            }
 
             lbDate.Text = "Date: " + collectionEmail.Date;
         }

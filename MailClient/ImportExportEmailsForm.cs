@@ -127,21 +127,17 @@ namespace MailClient
             }
             else
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "CSV files (*.csv)|*.txt|All files (*.*)|*.*";
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+
+                folderBrowserDialog.Description = "Browse for folder that contains .eml files";
+                if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                 {
-                    if (!File.Exists(openFileDialog.FileName))
-                    {
-                        MessageBox.Show("Loading Failed", "File does not exists");
-                        return;
-                    }
 
                     Task.Run(() =>
                     {
                         this.Invoke((Action)(() => pictureBoxLoading.Visible = true));
 
-                        _importExportTool.ImportEmailsFromFile(destinationType, openFileDialog.FileName, destinationFolderName);
+                        _importExportTool.ImportEmailsFromFile(destinationType, folderBrowserDialog.SelectedPath, destinationFolderName);
 
                         this.Invoke((Action)(() => pictureBoxLoading.Visible = false));
                         this.Invoke((Action)(() => this.Close()));

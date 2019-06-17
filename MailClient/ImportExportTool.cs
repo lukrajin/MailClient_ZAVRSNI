@@ -24,49 +24,33 @@ namespace MailClient
             {
                 case EmailType.Inbox:
                     {
-                        var inboxEmails = LoadInbox(path);
-                        foreach (var email in inboxEmails.Values)
+                        var inboxEmails = LoadMimeMessages(path);
+                        foreach (var email in inboxEmails)
                         {
-                            var message = new MimeMessage();
-
-                            message.From.Add(new MailboxAddress(email.From));
-                            message.To.Add(new MailboxAddress(email.To));
-                            message.Subject = email.Subject;
-                            message.Body = new TextPart("plain") { Text = email.Body };
-                            message.Date = email.ArrivalTime;
-
-                            _parentForm.MailReceiver.AddMessageToFolder(EmailType.Inbox, message);
+                            _parentForm.MailReceiver.AddMessageToFolder(EmailType.Inbox, email);
                         }
-                        _parentForm.toolStripButtonRefresh.PerformClick();
+                        _parentForm.Invoke((Action)(() => _parentForm.toolStripButtonRefresh.PerformClick()));
                     }
                     break;
 
                 case EmailType.SentEmails:
                     {
-                        var sentEmails = LoadSent(path);
-                        foreach (var email in sentEmails.Values)
+                        var sentEmails = LoadMimeMessages(path);
+                        foreach (var email in sentEmails)
                         {
-                            var message = new MimeMessage();
-
-                            message.From.Add(new MailboxAddress(email.From));
-                            message.To.Add(new MailboxAddress(email.To));
-                            message.Subject = email.Subject;
-                            message.Body = new TextPart("plain") { Text = email.Body };
-                            message.Date = email.SentTime;
-
-                            _parentForm.MailReceiver.AddMessageToFolder(EmailType.SentEmails, message);
+                            _parentForm.MailReceiver.AddMessageToFolder(EmailType.SentEmails, email);
                         }
-                        _parentForm.toolStripButtonRefresh.PerformClick();
+                        _parentForm.Invoke((Action)(() => _parentForm.toolStripButtonRefresh.PerformClick()));
                     }
                     break;
 
                 case EmailType.CollectionEmail:
                     {
-                        var collection = LoadCollection(path);
+                        var collection = LoadMimeMessages(path);
 
-                        foreach (var email in collection.Values)
+                        foreach (var email in collection)
                         {
-                            if (_parentForm.EmailCollection.ContainsKey(email.Id))
+                            if (_parentForm.EmailCollection.ContainsKey(email.MessageId))
                             {
                                 MessageBox.Show("Item already exists in collection", "Import failed");
                             }
@@ -75,13 +59,52 @@ namespace MailClient
                                 var selectedFolder = _parentForm.FolderList[destinationFolderName];
                                 ++selectedFolder.ItemCount;
 
-                                email.CustomFolderName = destinationFolderName;
-                                _parentForm.EmailCollection.TryAdd(email.Id, email);
+                                var fromAddresses = new List<string>();
+                                foreach (var address in email.From)
+                                {
+                                    fromAddresses.Add(((MailboxAddress)address).Address);
+                                }
+
+                                var toAddresses = new List<string>();
+                                foreach (var address in email.To)
+                                {
+                                    toAddresses.Add(((MailboxAddress)address).Address);
+                                }
+
+                                var collectionEmail = new CollectionEmail
+                                {
+                                    Id = email.MessageId,
+                                    From = string.Join(";", fromAddresses),
+                                    To = string.Join(";", toAddresses),
+                                    Subject = email.Subject,
+                                    TextBody = email.TextBody,
+                                    HtmlBody = email.HtmlBody,
+                                    Date = email.Date.UtcDateTime,
+                                    CustomFolderName = destinationFolderName,
+                                };
+    
+                                _parentForm.EmailCollection.TryAdd(collectionEmail.Id, collectionEmail);
                             }
                         }
                     }
                     break;
             }
+        }
+
+        private List<MimeMessage> LoadMimeMessages(string folderPath)
+        {
+            var mimeMessages = new List<MimeMessage>();
+
+            DirectoryInfo d = new DirectoryInfo(folderPath);
+            FileInfo[] Files = d.GetFiles("*.eml"); 
+
+            foreach (FileInfo file in Files)
+            {
+                var mimeMessage = MimeMessage.Load(file.FullName);
+                mimeMessages.Add(mimeMessage);
+            }
+
+            return mimeMessages;
         }
 
         public void ImportEmailsFromServer(ServerImportType importFrom, EmailType sourceType,
@@ -131,7 +154,7 @@ namespace MailClient
                         {
                             _parentForm.MailReceiver.AddMessageToFolder(EmailType.Inbox, email);
                         }
-                        _parentForm.toolStripButtonRefresh.PerformClick();
+                        _parentForm.Invoke((Action)(() => _parentForm.toolStripButtonRefresh.PerformClick()));
                     }
                     break;
 
@@ -141,7 +164,7 @@ namespace MailClient
                         {
                             _parentForm.MailReceiver.AddMessageToFolder(EmailType.SentEmails, email);
                         }
-                        _parentForm.toolStripButtonRefresh.PerformClick();
+                        _parentForm.Invoke((Action)(() => _parentForm.toolStripButtonRefresh.PerformClick()));
                     }
                     break;
 
@@ -158,18 +181,31 @@ namespace MailClient
                                 var selectedFolder = _parentForm.FolderList[destinationFolderName];
                                 ++selectedFolder.ItemCount;
 
-                                _parentForm.EmailCollection.TryAdd(email.MessageId,
-                                    new CollectionEmail
-                                    {
-                                        Id = email.MessageId,
-                                        From = ((MailboxAddress)email.From[0]).Address,
-                                        To = ((MailboxAddress)email.To[0]).Address,
-                                        Subject = email.Subject,
-                                        Body = email.TextBody,
-                                        Date = email.Date.UtcDateTime,
-                                        CustomFolderName = destinationFolderName,
-                                        EmailType = sourceType,
-                                    });
+                                var fromAddresses = new List<string>();
+                                foreach (var address in email.From)
+                                {
+                                    fromAddresses.Add(((MailboxAddress)address).Address);
+                                }
+
+                                var toAddresses = new List<string>();
+                                foreach (var address in email.To)
+                                {
+                                    toAddresses.Add(((MailboxAddress)address).Address);
+                                }
+
+                                var collectionEmail = new CollectionEmail
+                                {
+                                    Id = email.MessageId,
+                                    From = string.Join(";", fromAddresses),
+                                    To = string.Join(";", toAddresses),
+                                    Subject = email.Subject,
+                                    TextBody = email.TextBody,
+                                    HtmlBody = email.HtmlBody,
+                                    Date = email.Date.UtcDateTime,
+                                    CustomFolderName = destinationFolderName,
+                                };
+
+                                _parentForm.EmailCollection.TryAdd(collectionEmail.Id, collectionEmail);
                             }
                         }
                     }
@@ -276,7 +312,7 @@ namespace MailClient
                 {
                     var message = _parentForm.MailReceiver.GetEmail(EmailType.Inbox, email.UniqueId);
 
-                    message.WriteTo(Path.Combine(path, email.Id + ".msg"));
+                    message.WriteTo(Path.Combine(path, email.Id + ".eml"));
                 }
             }
             else if (emailType == EmailType.SentEmails)
@@ -286,7 +322,7 @@ namespace MailClient
                     var message=_parentForm.MailReceiver.GetEmail(EmailType.SentEmails, email.UniqueId);
 
 
-                    message.WriteTo(Path.Combine(path, email.Id + ".msg"));
+                    message.WriteTo(Path.Combine(path, email.Id + ".eml"));
                 }
             }
             else
@@ -297,25 +333,38 @@ namespace MailClient
                     {
                         var message = new MimeMessage();
 
-                        message.From.Add(new MailboxAddress(email.From));
-                        message.To.Add(new MailboxAddress(email.To));
-                        message.Subject = email.Subject;
-                        if (email.Body == null)
+                        foreach (var address in email.From.Split(';'))
                         {
-                            message.Body = new TextPart("plain")
-                            {
-                                Text = ""
-                            };
+                            message.From.Add(new MailboxAddress(address));
+                        }
+
+                        foreach (var address in email.To.Split(';'))
+                        {
+                            message.To.Add(new MailboxAddress(address));
+                        }
+
+                        var bodyBuilder = new BodyBuilder();
+
+                        if (email.TextBody == null)
+                        {
+                            bodyBuilder.TextBody = "";
                         }
                         else
                         {
-                   
-                            message.Body = new TextPart("plain") { Text = email.Body };
+
+                            bodyBuilder.TextBody = email.TextBody;
                         }
+
+                        bodyBuilder.HtmlBody = email.HtmlBody;
+                
+                        message.Body = bodyBuilder.ToMessageBody();
+
+                        message.Subject = email.Subject;
+
                         message.Date = email.Date;
                         message.MessageId = email.Id;
 
-                        message.WriteTo(Path.Combine(path, email.Id + ".msg"));
+                        message.WriteTo(Path.Combine(path, email.Id + ".eml"));
                     }
                 }
             }

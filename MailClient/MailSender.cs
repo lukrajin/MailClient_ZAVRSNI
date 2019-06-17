@@ -30,8 +30,16 @@ namespace MailClient
         {
             var message = new MimeMessage();
 
-            message.From.Add(new MailboxAddress(from));
-            message.To.Add(new MailboxAddress(to));
+            foreach (var address in from.Split(';'))
+            {
+                message.From.Add(new MailboxAddress(address));
+            }
+
+            foreach(var address in to.Split(';'))
+            {
+                message.To.Add(new MailboxAddress(address));
+            }
+
             message.Subject = subject;
             message.Body = new TextPart { Text = body };
 

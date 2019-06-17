@@ -36,8 +36,6 @@ namespace MailClient
             comboBoxServer.Enabled = false;
             pictureBoxLoading.Visible = true;
 
-            _parentForm.Size = new System.Drawing.Size(1118, 594);
-
             Task.Run(() =>
                     {
                         try
