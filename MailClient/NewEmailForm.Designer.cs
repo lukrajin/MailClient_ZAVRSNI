@@ -39,6 +39,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnSend = new System.Windows.Forms.Button();
             this.pictureBoxLoading = new System.Windows.Forms.PictureBox();
+            this.buttonFillRandom = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLoading)).BeginInit();
             this.SuspendLayout();
             // 
@@ -157,12 +158,23 @@
             this.pictureBoxLoading.TabStop = false;
             this.pictureBoxLoading.Visible = false;
             // 
+            // buttonFillRandom
+            // 
+            this.buttonFillRandom.Location = new System.Drawing.Point(699, 110);
+            this.buttonFillRandom.Name = "buttonFillRandom";
+            this.buttonFillRandom.Size = new System.Drawing.Size(75, 23);
+            this.buttonFillRandom.TabIndex = 18;
+            this.buttonFillRandom.Text = "Fill Random";
+            this.buttonFillRandom.UseVisualStyleBackColor = true;
+            this.buttonFillRandom.Click += new System.EventHandler(this.buttonFillRandom_Click);
+            // 
             // NewEmailForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(787, 546);
+            this.Controls.Add(this.buttonFillRandom);
             this.Controls.Add(this.pictureBoxLoading);
             this.Controls.Add(this.btnSend);
             this.Controls.Add(this.tbFrom);
@@ -195,5 +207,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnSend;
         private System.Windows.Forms.PictureBox pictureBoxLoading;
+        private System.Windows.Forms.Button buttonFillRandom;
     }
 }

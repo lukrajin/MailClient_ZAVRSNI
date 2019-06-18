@@ -1,4 +1,5 @@
-﻿using MimeKit;
+﻿using Bogus;
+using MimeKit;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -47,6 +48,7 @@ namespace MailClient
                 _host = ServerInfo.Gmail.SmtpServer;
                 _port = ServerInfo.Gmail.SmtpPort;
             }
+
         }
         public void LoadFromMailPreview(string to, string subject, string body)
         {
@@ -92,6 +94,13 @@ namespace MailClient
             {
                 btnSend.Enabled = false;
             }
+        }
+
+        private void buttonFillRandom_Click(object sender, EventArgs e)
+        {
+            Faker faker = new Bogus.Faker();
+            tbBody.Text = faker.Lorem.Sentences(new Random().Next(10, 50));
+            tbSubject.Text = faker.Lorem.Sentence();
         }
     }
 }
