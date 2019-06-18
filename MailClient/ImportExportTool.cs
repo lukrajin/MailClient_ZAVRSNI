@@ -3,6 +3,7 @@ using MimeKit;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -71,7 +72,7 @@ namespace MailClient
                                     toAddresses.Add(((MailboxAddress)address).Address);
                                 }
 
-                                var collectionEmail = new CollectionEmail
+                                var collectionEmail = new Models.CollectionEmail
                                 {
                                     Id = email.MessageId,
                                     From = string.Join(";", fromAddresses),
@@ -82,7 +83,7 @@ namespace MailClient
                                     Date = email.Date.UtcDateTime,
                                     CustomFolderName = destinationFolderName,
                                 };
-    
+
                                 _parentForm.EmailCollection.TryAdd(collectionEmail.Id, collectionEmail);
                             }
                         }
@@ -96,7 +97,7 @@ namespace MailClient
             var mimeMessages = new List<MimeMessage>();
 
             DirectoryInfo d = new DirectoryInfo(folderPath);
-            FileInfo[] Files = d.GetFiles("*.eml"); 
+            FileInfo[] Files = d.GetFiles("*.eml");
 
             foreach (FileInfo file in Files)
             {
@@ -193,7 +194,7 @@ namespace MailClient
                                     toAddresses.Add(((MailboxAddress)address).Address);
                                 }
 
-                                var collectionEmail = new CollectionEmail
+                                var collectionEmail = new Models.CollectionEmail
                                 {
                                     Id = email.MessageId,
                                     From = string.Join(";", fromAddresses),
@@ -214,77 +215,62 @@ namespace MailClient
             mailReceiver.Disconnect();
         }
 
-        public void ExportEmails(EmailType emailType)
+        public void SaveCollectionToDb()
         {
-            if (emailType == EmailType.Inbox)
+            using (var db = new Models.DatabaseContext())
             {
-                var records = new List<InboxEmail>();
+                var emails = db.Emails.ToList();
 
-                foreach (var email in _parentForm.ReceivedEmails.Values)
+                foreach (var email in emails)
                 {
-                    records.Add(email);
+                    if (!_parentForm.FolderList.ContainsKey(email.Id))
+                    {
+                        db.Emails.Remove(email);
+                    }
                 }
 
-                SaveEmails(emailType, records);
-            }
-            else if (emailType == EmailType.SentEmails)
-            {
-                var records = new List<SentEmail>();
-
-                foreach (var email in _parentForm.SentEmails.Values)
-                {
-                    records.Add(email);
-                }
-
-                SaveEmails(emailType, records);
-            }
-            else
-            {
-                var records = new List<CollectionEmail>();
+                db.SaveChanges();
 
                 foreach (var email in _parentForm.EmailCollection.Values)
                 {
-                    records.Add(email);
+                    db.Emails.AddOrUpdate(email);
                 }
 
-                SaveEmails(emailType, records);
+                db.SaveChanges();
             }
         }
 
-        public void ExportFolderList()
+        public void SaveFolderListToDb()
         {
-            var records = new List<CustomFolder>();
-
-            foreach (var folder in _parentForm.FolderList)
+            using (var db = new Models.DatabaseContext())
             {
-                records.Add(folder.Value);
+                var folders = db.Folders.ToList();
+
+                foreach (var folder in folders)
+                {
+                    if (!_parentForm.FolderList.ContainsKey(folder.FolderName))
+                    {
+                        db.Folders.Remove(folder);
+                    }
+                }
+
+                db.SaveChanges();
+
+                foreach (var folder in _parentForm.FolderList.Values)
+                {
+                    db.Folders.AddOrUpdate(folder);
+                }
+
+                db.SaveChanges();
             }
-            var _fileName = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) + "\\Data",
-                "FolderList" + ".csv");
-
-            if (!Directory.Exists(Path.GetDirectoryName(_fileName)))
-                Directory.CreateDirectory(Path.GetDirectoryName(_fileName));
-
-            WriteRecords(records, _fileName);
         }
 
-        internal ConcurrentDictionary<string, CustomFolder> LoadFolderList()
+        internal ConcurrentDictionary<string, Models.CustomFolder> LoadFolderList()
         {
-            var folderList = new List<CustomFolder>();
+            var context = new Models.DatabaseContext();
+            var folderList = context.Folders.ToList();
 
-            var _fileName = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) + "\\Data",
-            "FolderList" + ".csv");
-
-            if (!File.Exists(_fileName))
-                return null;
-
-            using (var reader = new StreamReader(_fileName))
-            using (var csv = new CsvReader(reader))
-            {
-                folderList = csv.GetRecords<CustomFolder>().ToList();
-            }
-
-            var folderListConcurrent = new ConcurrentDictionary<string, CustomFolder>();
+            var folderListConcurrent = new ConcurrentDictionary<string, Models.CustomFolder>();
 
             foreach (var folder in folderList)
             {
@@ -294,16 +280,6 @@ namespace MailClient
             return folderListConcurrent;
         }
 
-        private void SaveEmails<T>(EmailType emailType, List<T> records)
-        {
-            var _fileName = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) + "\\Data",
-                GetEmailTypeFileName(emailType) + ".csv");
-
-            if (!Directory.Exists(Path.GetDirectoryName(_fileName)))
-                Directory.CreateDirectory(Path.GetDirectoryName(_fileName));
-
-            WriteRecords(records, _fileName);
-        }
         public void ExportEmails(EmailType emailType, string path, string folderName = null)
         {
             if (emailType == EmailType.Inbox)
@@ -319,8 +295,7 @@ namespace MailClient
             {
                 foreach (var email in _parentForm.SentEmails.Values)
                 {
-                    var message=_parentForm.MailReceiver.GetEmail(EmailType.SentEmails, email.UniqueId);
-
+                    var message = _parentForm.MailReceiver.GetEmail(EmailType.SentEmails, email.UniqueId);
 
                     message.WriteTo(Path.Combine(path, email.Id + ".eml"));
                 }
@@ -351,12 +326,11 @@ namespace MailClient
                         }
                         else
                         {
-
                             bodyBuilder.TextBody = email.TextBody;
                         }
 
                         bodyBuilder.HtmlBody = email.HtmlBody;
-                
+
                         message.Body = bodyBuilder.ToMessageBody();
 
                         message.Subject = email.Subject;
@@ -369,6 +343,7 @@ namespace MailClient
                 }
             }
         }
+
         public void WriteRecords<T>(List<T> records, string path)
         {
             using (var writer = new StreamWriter(path))
@@ -460,27 +435,19 @@ namespace MailClient
             return null;
         }
 
-        public ConcurrentDictionary<string, CollectionEmail> LoadCollection(string path)
+        public ConcurrentDictionary<string, Models.CollectionEmail> LoadCollection()
         {
-            var collectionEmails = new List<CollectionEmail>();
-            if (path != null)
+            var context = new Models.DatabaseContext();
+            var collectionEmails = context.Emails.ToList();
+
+            var emailsCollectionConcurrent = new ConcurrentDictionary<string, Models.CollectionEmail>();
+
+            foreach (var email in collectionEmails)
             {
-                using (var reader = new StreamReader(path))
-                using (var csv = new CsvReader(reader))
-                {
-                    collectionEmails = csv.GetRecords<CollectionEmail>().ToList();
-                }
-
-                var emailsCollectionConcurrent = new ConcurrentDictionary<string, CollectionEmail>();
-                foreach (var email in collectionEmails)
-                {
-                    emailsCollectionConcurrent.TryAdd(email.Id, email);
-                }
-
-                return emailsCollectionConcurrent;
+                emailsCollectionConcurrent.TryAdd(email.Id, email);
             }
 
-            return null;
+            return emailsCollectionConcurrent;
         }
 
         public enum ServerImportType { FromGmail, FromYandex };

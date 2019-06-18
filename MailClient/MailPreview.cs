@@ -29,7 +29,7 @@ namespace MailClient
 
             _parentForm.MailReceiver.SetMessageSeen(EmailType.SentEmails, sentEmail.UniqueId);
         }
-        public MailPreview(MailClientForm parentForm, CollectionEmail collectionEmail)
+        public MailPreview(MailClientForm parentForm, Models.CollectionEmail collectionEmail)
         {
             InitializeComponent();
 

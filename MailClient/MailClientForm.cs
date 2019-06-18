@@ -7,19 +7,18 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MailClient.Models;
 
 namespace MailClient
 {
     public partial class MailClientForm : Form
     {
-        private NewEmailForm _newEmailForm;
         private ImportExportTool ImportExportTool { get; set; }
         public MailReceiver MailReceiver { get; set; }
-        private MimeMessage NewEmail;
         public ConcurrentDictionary<string, SentEmail> SentEmails { get; set; }
         public ConcurrentDictionary<string, InboxEmail> ReceivedEmails { get; set; }
 
-        public ConcurrentDictionary<string, CollectionEmail> EmailCollection { get; set; }
+        public ConcurrentDictionary<string, Models.CollectionEmail> EmailCollection { get; set; }
         public ConcurrentDictionary<string, CustomFolder> FolderList { get; set; }
         private LoginForm loginForm;
         private MailPreview mailPreview;
@@ -35,7 +34,7 @@ namespace MailClient
             InitializeComponent();
             ImportExportTool = new ImportExportTool(this);
 
-            EmailCollection = ImportExportTool.LoadCollection(ImportExportTool.GetEmailsPath(EmailType.CollectionEmail));
+            EmailCollection = ImportExportTool.LoadCollection();
             if (EmailCollection == null)
                 EmailCollection = new ConcurrentDictionary<string, CollectionEmail>();
 
@@ -344,6 +343,7 @@ namespace MailClient
                 mailPreview.Location = MousePosition;
                 mailPreview.Show();
                 hitRow.Cells[1].Value = MailClient.Properties.Resources.read_message_40px;
+                selectedEmail.IsRead = true;
             }
             else if (CurrentView == EmailView.SentEmails)
             {
@@ -356,6 +356,7 @@ namespace MailClient
                 mailPreview.Location = MousePosition;
                 mailPreview.Show();
                 hitRow.Cells[1].Value = MailClient.Properties.Resources.read_message_40px;
+                selectedEmail.IsRead = true;
             }
             else
             {
@@ -466,8 +467,8 @@ namespace MailClient
         {
             if (MailReceiver != null)
             {
-                ImportExportTool.ExportEmails(EmailType.CollectionEmail);
-                ImportExportTool.ExportFolderList();
+                ImportExportTool.SaveCollectionToDb();
+                ImportExportTool.SaveFolderListToDb();
             }
         }
 
@@ -608,8 +609,7 @@ namespace MailClient
                                 HtmlBody = selectedEmail.ToMimeMessage().HtmlBody,
                                 Date = selectedEmail.ArrivalTime,
                                 CustomFolderName = selectedFolderId,
-                                OriginalFolder = EmailType.Inbox,
-                                UniqueId = selectedEmail.UniqueId
+                                OriginalFolder = EmailType.Inbox
                             });
                     }
                     else if (CurrentView == EmailView.SentEmails)
@@ -631,7 +631,6 @@ namespace MailClient
                                 Date = selectedEmail.SentTime,
                                 CustomFolderName = selectedFolderId,
                                 OriginalFolder = EmailType.SentEmails,
-                                UniqueId = selectedEmail.UniqueId
                             });
                     }
                     else
@@ -769,7 +768,6 @@ namespace MailClient
                                     Date = selectedEmail.ArrivalTime,
                                     CustomFolderName = selectedFolderName,
                                     OriginalFolder = EmailType.Inbox,
-                                    UniqueId = selectedEmail.UniqueId
                                 });
                             MailReceiver.DeleteEmail(EmailType.Inbox, selectedEmail.UniqueId);
                         }
@@ -798,7 +796,6 @@ namespace MailClient
                                     Date = selectedEmail.SentTime,
                                     CustomFolderName = selectedFolderName,
                                     OriginalFolder = EmailType.Inbox,
-                                    UniqueId = selectedEmail.UniqueId
                                 });
                             MailReceiver.DeleteEmail(EmailType.SentEmails, selectedEmail.UniqueId);
                         }

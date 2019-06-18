@@ -38,7 +38,7 @@ namespace MailClient
                 if (_parentForm.FolderList.Values.FirstOrDefault(x => x.FolderName == FolderName) == null)
                 {
                     var folder = _parentForm.FolderList.Values.FirstOrDefault(x => x.FolderName == OldFolderName);
-                    CustomFolder customFolder;
+                    Models.CustomFolder customFolder;
                     _parentForm.FolderList.TryRemove(OldFolderName, out customFolder);
 
                     foreach (var email in _parentForm.EmailCollection.Values)
@@ -65,7 +65,7 @@ namespace MailClient
 
             if (_parentForm.FolderList.Values.FirstOrDefault(x => x.FolderName == FolderName) == null)
             {
-                _parentForm.FolderList.TryAdd(FolderName, new CustomFolder
+                _parentForm.FolderList.TryAdd(FolderName, new Models.CustomFolder
                 {
                     FolderName = FolderName,
                     DateCreated = DateTime.Now,
