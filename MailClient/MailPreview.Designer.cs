@@ -42,6 +42,8 @@
             this.buttonReply = new System.Windows.Forms.Button();
             this.webBrowserBody = new System.Windows.Forms.WebBrowser();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.pictureBoxLoading = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLoading)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -179,12 +181,28 @@
             this.webBrowserBody.TabIndex = 11;
             this.webBrowserBody.Visible = false;
             // 
+            // pictureBoxLoading
+            // 
+            this.pictureBoxLoading.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBoxLoading.BackColor = System.Drawing.Color.White;
+            this.pictureBoxLoading.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxLoading.Image")));
+            this.pictureBoxLoading.Location = new System.Drawing.Point(11, 178);
+            this.pictureBoxLoading.Name = "pictureBoxLoading";
+            this.pictureBoxLoading.Size = new System.Drawing.Size(763, 356);
+            this.pictureBoxLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBoxLoading.TabIndex = 12;
+            this.pictureBoxLoading.TabStop = false;
+            this.pictureBoxLoading.Visible = false;
+            // 
             // MailPreview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(787, 546);
+            this.Controls.Add(this.pictureBoxLoading);
             this.Controls.Add(this.webBrowserBody);
             this.Controls.Add(this.buttonReply);
             this.Controls.Add(this.buttonForward);
@@ -201,6 +219,7 @@
             this.MinimumSize = new System.Drawing.Size(719, 495);
             this.Name = "MailPreview";
             this.Text = "Mail Preview";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLoading)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -221,5 +240,6 @@
         private System.Windows.Forms.Button buttonReply;
         private System.Windows.Forms.WebBrowser webBrowserBody;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.PictureBox pictureBoxLoading;
     }
 }

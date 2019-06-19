@@ -1,8 +1,10 @@
-﻿using MailKit;
+﻿using HtmlAgilityPack;
+using MailKit;
 using MailKit.Net.Imap;
 using MimeKit;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace MailClient
@@ -42,6 +44,14 @@ namespace MailClient
 
             _mailClientForm = mailClientForm;
         }
+        public MailReceiver(string mailServer, int port, bool ssl, string login, string password)
+        {
+            this.mailServer = mailServer;
+            this.port = port;
+            this.ssl = ssl;
+            this.Login = login;
+            this.Password = password;
+        }
 
         public void Connect()
         {
@@ -62,45 +72,48 @@ namespace MailClient
             var inbox = client.Inbox;
             inbox.Open(FolderAccess.ReadWrite);
 
-            var items = inbox.Fetch(UniqueIdRange.All, MessageSummaryItems.Flags);
+            var summary = inbox.Fetch(0, -1, MessageSummaryItems.Full |
+                MessageSummaryItems.UniqueId | MessageSummaryItems.PreviewText);
 
-            foreach (var item in items)
+            foreach (var item in summary)
             {
-                var message = inbox.GetMessage(item.UniqueId);
 
-                var fromAddresses = new List<string>();
-                foreach (var address in message.From)
-                {
-                    fromAddresses.Add(((MailboxAddress)address).Address);
-                }
+                var inboxEmail = GetInboxEmailFromSummary(item);
 
-                var toAddresses = new List<string>();
-                foreach (var address in message.To)
-                {
-                    toAddresses.Add(((MailboxAddress)address).Address);
-                }
-
-                var inboxEmail = new InboxEmail
-                {
-                    Id = message.MessageId,
-                    ArrivalTime = message.Date.UtcDateTime,
-                    From = string.Join(";", fromAddresses),
-                    To = string.Join(";", toAddresses),
-                    Subject = message.Subject,
-                    Body = message.TextBody,
-                    UniqueId = item.UniqueId,
-                    IsRead = item.Flags.Value.HasFlag(MessageFlags.Seen)
-                };
-
-                inboxEmail.AttachMimeMessage(message);
-
-                mailMessages.TryAdd(message.MessageId, inboxEmail);
-                
+                mailMessages.TryAdd(inboxEmail.Id, inboxEmail);
             }
 
             return mailMessages;
         }
+        InboxEmail GetInboxEmailFromSummary(IMessageSummary item)
+        {
+            var fromAddresses = new List<string>();
+            foreach (var address in item.Envelope.From)
+            {
+                fromAddresses.Add(((MailboxAddress)address).Address);
+            }
 
+            var toAddresses = new List<string>();
+            foreach (var address in item.Envelope.To)
+            {
+                toAddresses.Add(((MailboxAddress)address).Address);
+            }
+
+            var inboxEmail = new InboxEmail
+            {
+                Id = item.Envelope.MessageId,
+                ArrivalTime = item.Date.UtcDateTime,
+                From = string.Join(";", fromAddresses),
+                To = string.Join(";", toAddresses),
+                Subject = item.Envelope.Subject,
+                PreviewText = HtmlUtility.ConvertToPlainText(item.PreviewText),
+                UniqueId = item.UniqueId,
+                IsRead = item.Flags.Value.HasFlag(MessageFlags.Seen)
+            };
+
+
+            return inboxEmail;
+        }
         public List<MimeMessage> GetInboxMimeMessages()
         {
             var mailMessages = new List<MimeMessage>();
@@ -153,44 +166,46 @@ namespace MailClient
                 return mailMessages;
 
             SentFolder.Open(FolderAccess.ReadWrite);
-            var items = SentFolder.Fetch(UniqueIdRange.All, MessageSummaryItems.Flags);
 
-            foreach (var item in items)
+            var summary = SentFolder.Fetch(0, -1, MessageSummaryItems.Full
+                | MessageSummaryItems.UniqueId | MessageSummaryItems.PreviewText);
+
+            foreach (var item in summary)
             {
-                var message = SentFolder.GetMessage(item.UniqueId);
-
-                var fromAddresses = new List<string>();
-                foreach(var address in message.From)
-                {
-                    fromAddresses.Add(((MailboxAddress)address).Address);
-                }
-
-                var toAddresses = new List<string>();
-                foreach (var address in message.To)
-                {
-                    toAddresses.Add(((MailboxAddress)address).Address);
-                }
-
-                var sentEmail = new SentEmail
-                {
-                    Id = message.MessageId,
-                    SentTime = message.Date.UtcDateTime,
-                    From = string.Join(";", fromAddresses),
-                    To = string.Join(";", toAddresses),
-                    Subject = message.Subject,
-                    Body = message.TextBody,
-                    UniqueId = item.UniqueId,
-                    IsRead = item.Flags.Value.HasFlag(MessageFlags.Seen)
-                };
-
-                sentEmail.AttachMimeMessage(message);
-
-                mailMessages.TryAdd(message.MessageId, sentEmail);
+                var sentEmail = GetSentEmailFromSummary(item);
+                mailMessages.TryAdd(sentEmail.Id, sentEmail);
             }
 
             return mailMessages;
         }
+        SentEmail GetSentEmailFromSummary(IMessageSummary item)
+        {
+            var fromAddresses = new List<string>();
+            foreach (var address in item.Envelope.From)
+            {
+                fromAddresses.Add(((MailboxAddress)address).Address);
+            }
 
+            var toAddresses = new List<string>();
+            foreach (var address in item.Envelope.To)
+            {
+                toAddresses.Add(((MailboxAddress)address).Address);
+            }
+
+            var sentEmail = new SentEmail
+            {
+                Id = item.Envelope.MessageId,
+                SentTime = item.Date.UtcDateTime,
+                From = string.Join(";", fromAddresses),
+                To = string.Join(";", toAddresses),
+                Subject = item.Envelope.Subject,
+                UniqueId = item.UniqueId,
+                PreviewText = HtmlUtility.ConvertToPlainText(item.PreviewText),
+                IsRead = item.Flags.Value.HasFlag(MessageFlags.Seen)
+            };
+
+            return sentEmail;
+        }
         public IMailFolder GetSentEmailsFolder()
         {
             var personal = client.GetFolder(client.PersonalNamespaces[0]);
@@ -200,78 +215,99 @@ namespace MailClient
 
         public void DeleteEmail(EmailType emailType, UniqueId uniqueId)
         {
-            if (emailType == EmailType.Inbox)
+            lock (this)
             {
-                if (!client.Inbox.IsOpen)
-                    client.Inbox.Open(FolderAccess.ReadWrite);
+                if (emailType == EmailType.Inbox)
+                {
+                    if (!client.Inbox.IsOpen)
+                        client.Inbox.Open(FolderAccess.ReadWrite);
 
-                client.Inbox.AddFlags(uniqueId, MessageFlags.Deleted, true);
-                client.Inbox.Expunge();
-            }
-            else if (emailType == EmailType.SentEmails)
-            {
-                if (!SentFolder.IsOpen)
-                    SentFolder.Open(FolderAccess.ReadWrite);
+                    client.Inbox.AddFlags(uniqueId, MessageFlags.Deleted, true);
+                    client.Inbox.Expunge();
+                }
+                else if (emailType == EmailType.SentEmails)
+                {
+                    if (!SentFolder.IsOpen)
+                        SentFolder.Open(FolderAccess.ReadWrite);
 
-                SentFolder.AddFlags(uniqueId, MessageFlags.Deleted, true);
-                SentFolder.Expunge();
+                    SentFolder.AddFlags(uniqueId, MessageFlags.Deleted, true);
+                    SentFolder.Expunge();
+                }
             }
         }
 
         public void SetMessageSeen(EmailType emailType, UniqueId uniqueId)
         {
-            if (emailType == EmailType.Inbox)
+            lock (this)
             {
-                if (!client.Inbox.IsOpen)
-                    client.Inbox.Open(FolderAccess.ReadWrite);
+                if (emailType == EmailType.Inbox)
+                {
+                    if (!client.Inbox.IsOpen)
+                        client.Inbox.Open(FolderAccess.ReadWrite);
 
-                client.Inbox.AddFlags(uniqueId, MessageFlags.Seen, true);
-            }
-            else if (emailType == EmailType.SentEmails)
-            {
-                if (!SentFolder.IsOpen)
-                    SentFolder.Open(FolderAccess.ReadWrite);
+                    client.Inbox.AddFlags(uniqueId, MessageFlags.Seen, true);
+                }
+                else if (emailType == EmailType.SentEmails)
+                {
+                    if (!SentFolder.IsOpen)
+                        SentFolder.Open(FolderAccess.ReadWrite);
 
-                SentFolder.AddFlags(uniqueId, MessageFlags.Seen, true);
+                    SentFolder.AddFlags(uniqueId, MessageFlags.Seen, true);
+                }
             }
         }
 
         public void AddMessageToFolder(EmailType emailType, MimeMessage mimeMessage)
         {
-            if (emailType == EmailType.Inbox)
+            lock (this)
             {
-                if (!client.Inbox.IsOpen)
-                    client.Inbox.Open(FolderAccess.ReadWrite);
+                if (emailType == EmailType.Inbox)
+                {
+                    if (!client.Inbox.IsOpen)
+                        client.Inbox.Open(FolderAccess.ReadWrite);
 
-                client.Inbox.Append(mimeMessage);
-            }
-            else if (emailType == EmailType.SentEmails)
-            {
-                if (!SentFolder.IsOpen)
-                    SentFolder.Open(FolderAccess.ReadWrite);
+                    client.Inbox.Append(mimeMessage);
+                }
+                else if (emailType == EmailType.SentEmails)
+                {
+                    if (!SentFolder.IsOpen)
+                        SentFolder.Open(FolderAccess.ReadWrite);
 
-                SentFolder.Append(mimeMessage);
+                    SentFolder.Append(mimeMessage);
+                }
             }
         }
 
         public MimeMessage GetEmail(EmailType emailType, UniqueId uniqueId)
         {
-            if (emailType == EmailType.Inbox)
+            lock (this)
             {
-                if (!client.Inbox.IsOpen)
-                    client.Inbox.Open(FolderAccess.ReadWrite);
+                if (emailType == EmailType.Inbox)
+                {
+                    if (!client.Inbox.IsOpen)
+                        client.Inbox.Open(FolderAccess.ReadWrite);
 
-                return client.Inbox.GetMessage(uniqueId);
+                    return client.Inbox.GetMessage(uniqueId);
+                }
+                else if (emailType == EmailType.SentEmails)
+                {
+                    if (!SentFolder.IsOpen)
+                        SentFolder.Open(FolderAccess.ReadWrite);
+
+                    return SentFolder.GetMessage(uniqueId);
+                }
+
+                return null;
             }
-            else if (emailType == EmailType.SentEmails)
-            {
-                if (!SentFolder.IsOpen)
-                    SentFolder.Open(FolderAccess.ReadWrite);
-
-                return SentFolder.GetMessage(uniqueId);
-            }
-
-            return null;
         }
+        public MailReceiver GetMailReceiverInstance()
+        {
+            MailReceiver mailReceiver = new MailReceiver(mailServer, port, ssl, Login, Password);
+
+            mailReceiver.Connect();
+
+            return mailReceiver; 
+        }
+
     }
 }

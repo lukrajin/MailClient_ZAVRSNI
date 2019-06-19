@@ -69,14 +69,14 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.11.7.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.11.7\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="MailKit, Version=2.2.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
       <HintPath>..\packages\MailKit.2.2.0\lib\net45\MailKit.dll</HintPath>
     </Reference>
     <Reference Include="MimeKit, Version=2.2.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814, processorArchitecture=MSIL">
       <HintPath>..\packages\MimeKit.2.2.0\lib\net45\MimeKit.dll</HintPath>
-    </Reference>
-    <Reference Include="SautinSoft.RtfToHtml, Version=6.1.12.20, Culture=neutral, PublicKeyToken=c666a5e96a3d5457, processorArchitecture=MSIL">
-      <HintPath>..\packages\sautinsoft.rtftohtml.6.1.12.20\lib\net45\SautinSoft.RtfToHtml.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -102,6 +102,7 @@
     <Compile Include="FolderEdit.Designer.cs">
       <DependentUpon>FolderEdit.cs</DependentUpon>
     </Compile>
+    <Compile Include="HtmlUtility.cs" />
     <Compile Include="ImportExportEmailsForm.cs">
       <SubType>Form</SubType>
     </Compile>

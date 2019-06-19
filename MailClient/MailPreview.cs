@@ -1,6 +1,5 @@
-﻿using MimeKit;
-using System;
-using System.IO;
+﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MailClient
@@ -17,18 +16,33 @@ namespace MailClient
             tbFrom.Text = sentEmail.From;
             tbTo.Text = sentEmail.To;
             tbSubject.Text = sentEmail.Subject;
-            tbBody.Text = sentEmail.Body;
 
-            if (!string.IsNullOrEmpty(sentEmail.ToMimeMessage().HtmlBody))
+            pictureBoxLoading.Visible = true;
+
+            Task.Run(() =>
             {
-                webBrowserBody.DocumentText = sentEmail.ToMimeMessage().HtmlBody;
-                webBrowserBody.Visible = true;
-            }
+                var message = _parentForm.MailReceiver.GetEmail(EmailType.SentEmails, sentEmail.UniqueId);
+
+                if (!string.IsNullOrEmpty(message.HtmlBody))
+                {
+                    this.Invoke((Action)(() => webBrowserBody.DocumentText = message.HtmlBody));
+                    this.Invoke((Action)(() => webBrowserBody.Visible = true));
+                }
+                else if (!string.IsNullOrEmpty(message.TextBody))
+                {
+                    this.Invoke((Action)(() => tbBody.Text = message.TextBody));
+                }
+
+                this.Invoke((Action)(() => pictureBoxLoading.Visible = false));
+                this.Invoke((Action)(() => pictureBoxLoading.Enabled = false));
+
+                _parentForm.MailReceiver.SetMessageSeen(EmailType.SentEmails, sentEmail.UniqueId);
+            });
+
 
             lbDate.Text = "Sent Time: " + sentEmail.SentTime;
-
-            _parentForm.MailReceiver.SetMessageSeen(EmailType.SentEmails, sentEmail.UniqueId);
         }
+
         public MailPreview(MailClientForm parentForm, Models.CollectionEmail collectionEmail)
         {
             InitializeComponent();
@@ -45,9 +59,14 @@ namespace MailClient
                 webBrowserBody.DocumentText = collectionEmail.HtmlBody;
                 webBrowserBody.Visible = true;
             }
+            else if (!string.IsNullOrEmpty(collectionEmail.TextBody))
+            {
+                tbBody.Text = collectionEmail.TextBody;
+            }
 
             lbDate.Text = "Date: " + collectionEmail.Date;
         }
+
         public MailPreview(MailClientForm parentForm, InboxEmail inboxEmail)
         {
             InitializeComponent();
@@ -56,29 +75,40 @@ namespace MailClient
             tbFrom.Text = inboxEmail.From;
             tbTo.Text = inboxEmail.To;
             tbSubject.Text = inboxEmail.Subject;
-            tbBody.Text = inboxEmail.Body;
 
-            if (!string.IsNullOrEmpty(inboxEmail.ToMimeMessage().HtmlBody))
+            pictureBoxLoading.Visible = true;
+
+            Task.Run(() =>
             {
-                webBrowserBody.DocumentText = inboxEmail.ToMimeMessage().HtmlBody;
-                webBrowserBody.Visible = true;
-            }
+                var message = _parentForm.MailReceiver.GetEmail(EmailType.Inbox, inboxEmail.UniqueId);
+
+                if (!string.IsNullOrEmpty(message.HtmlBody))
+                {
+                    this.Invoke((Action)(() => webBrowserBody.DocumentText = message.HtmlBody));
+                    this.Invoke((Action)(() => webBrowserBody.Visible = true));
+                }
+                else if (!string.IsNullOrEmpty(message.TextBody))
+                {
+                    this.Invoke((Action)(() => tbBody.Text = message.TextBody));
+                }
+
+                this.Invoke((Action)(() => pictureBoxLoading.Visible = false));
+                this.Invoke((Action)(() => pictureBoxLoading.Enabled = false));
+
+                _parentForm.MailReceiver.SetMessageSeen(EmailType.Inbox, inboxEmail.UniqueId);
+            });
 
             lbDate.Text = "Arrival Time: " + inboxEmail.ArrivalTime;
-            _parentForm.MailReceiver.SetMessageSeen(EmailType.Inbox, inboxEmail.UniqueId);
-
         }
 
         private void buttonForward_Click(object sender, EventArgs e)
         {
-
             var newEmailForm = new NewEmailForm(_parentForm);
             newEmailForm.LoadFromMailPreview("", "FWD: " + tbSubject.Text, tbBody.Text);
             newEmailForm.StartPosition = FormStartPosition.Manual;
             newEmailForm.Location = this.Location;
             this.Close();
             newEmailForm.Show();
-
         }
 
         private void buttonReply_Click(object sender, EventArgs e)

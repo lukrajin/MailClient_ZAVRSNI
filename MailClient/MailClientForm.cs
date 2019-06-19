@@ -99,7 +99,7 @@ namespace MailClient
                         messages.Rows.Add(email.Id, image
                              ,
                             email.ArrivalTime, CreateShortText(email.From, 40), CreateShortText(email.To, 40),
-                            email.Subject, CreateShortText(email.Body, 40)
+                            email.Subject, CreateShortText(email.PreviewText, 40)
                             );
                     }
                 }
@@ -132,7 +132,7 @@ namespace MailClient
                         messages.Rows.Add(email.Id,
                             image,
                             email.SentTime, CreateShortText(email.From, 40), CreateShortText(email.To, 40),
-                            email.Subject, CreateShortText(email.Body, 40));
+                            email.Subject, CreateShortText(email.PreviewText, 40));
                     }
                 }
                 else
@@ -597,20 +597,21 @@ namespace MailClient
                             return;
                         }
 
-                        ++selectedFolder.ItemCount;
-                        EmailCollection.TryAdd(selectedEmail.Id,
-                            new CollectionEmail
-                            {
-                                Id = selectedEmail.Id,
-                                From = selectedEmail.From,
-                                To = selectedEmail.To,
-                                Subject = selectedEmail.Subject,
-                                TextBody = selectedEmail.Body,
-                                HtmlBody = selectedEmail.ToMimeMessage().HtmlBody,
-                                Date = selectedEmail.ArrivalTime,
-                                CustomFolderName = selectedFolderId,
-                                OriginalFolder = EmailType.Inbox
-                            });
+                       var email = MailReceiver.GetEmail(EmailType.Inbox, selectedEmail.UniqueId);
+                            ++selectedFolder.ItemCount;
+                            EmailCollection.TryAdd(selectedEmail.Id,
+                                new CollectionEmail
+                                {
+                                    Id = selectedEmail.Id,
+                                    From = selectedEmail.From,
+                                    To = selectedEmail.To,
+                                    Subject = selectedEmail.Subject,
+                                    TextBody = email.TextBody,
+                                    HtmlBody = email.HtmlBody,
+                                    Date = selectedEmail.ArrivalTime,
+                                    CustomFolderName = selectedFolderId,
+                                    OriginalFolder = EmailType.Inbox,
+                                });
                     }
                     else if (CurrentView == EmailView.SentEmails)
                     {
@@ -618,6 +619,7 @@ namespace MailClient
                         var selectedFolderId = FolderList.FirstOrDefault(x => x.Value.FolderName == e.ClickedItem.Text).Value.FolderName;
                         var selectedFolder = FolderList[selectedFolderId];
 
+                        var email = MailReceiver.GetEmail(EmailType.Inbox, selectedEmail.UniqueId);
                         ++selectedFolder.ItemCount;
                         EmailCollection.TryAdd(selectedEmail.Id,
                             new CollectionEmail
@@ -626,8 +628,8 @@ namespace MailClient
                                 From = selectedEmail.From,
                                 To = selectedEmail.To,
                                 Subject = selectedEmail.Subject,
-                                TextBody = selectedEmail.Body,
-                                HtmlBody = selectedEmail.ToMimeMessage().HtmlBody,
+                                TextBody = email.TextBody,
+                                HtmlBody = email.HtmlBody,
                                 Date = selectedEmail.SentTime,
                                 CustomFolderName = selectedFolderId,
                                 OriginalFolder = EmailType.SentEmails,
@@ -755,6 +757,7 @@ namespace MailClient
                                 return;
                             }
 
+                            var email = MailReceiver.GetEmail(EmailType.Inbox, selectedEmail.UniqueId);
                             ++selectedFolder.ItemCount;
                             EmailCollection.TryAdd(selectedEmail.Id,
                                 new CollectionEmail
@@ -763,8 +766,8 @@ namespace MailClient
                                     From = selectedEmail.From,
                                     To = selectedEmail.To,
                                     Subject = selectedEmail.Subject,
-                                    TextBody = selectedEmail.Body,
-                                    HtmlBody = selectedEmail.ToMimeMessage().HtmlBody,
+                                    TextBody = email.TextBody,
+                                    HtmlBody = email.HtmlBody,
                                     Date = selectedEmail.ArrivalTime,
                                     CustomFolderName = selectedFolderName,
                                     OriginalFolder = EmailType.Inbox,
@@ -784,6 +787,8 @@ namespace MailClient
                             }
 
                             ++selectedFolder.ItemCount;
+                             var email = MailReceiver.GetEmail(EmailType.SentEmails, selectedEmail.UniqueId);
+                            ++selectedFolder.ItemCount;
                             EmailCollection.TryAdd(selectedEmail.Id,
                                 new CollectionEmail
                                 {
@@ -791,11 +796,11 @@ namespace MailClient
                                     From = selectedEmail.From,
                                     To = selectedEmail.To,
                                     Subject = selectedEmail.Subject,
-                                    TextBody = selectedEmail.Body,
-                                    HtmlBody = selectedEmail.ToMimeMessage().HtmlBody,
+                                    TextBody = email.TextBody,
+                                    HtmlBody = email.HtmlBody,
                                     Date = selectedEmail.SentTime,
                                     CustomFolderName = selectedFolderName,
-                                    OriginalFolder = EmailType.Inbox,
+                                    OriginalFolder = EmailType.SentEmails,
                                 });
                             MailReceiver.DeleteEmail(EmailType.SentEmails, selectedEmail.UniqueId);
                         }
@@ -821,7 +826,6 @@ namespace MailClient
             searchForm.Show();
         }
     }
-
     public enum EmailType
     { Inbox, SentEmails, CollectionEmail };
 
