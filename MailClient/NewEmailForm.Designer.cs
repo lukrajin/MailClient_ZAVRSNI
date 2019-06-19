@@ -160,6 +160,7 @@
             // 
             // buttonFillRandom
             // 
+            this.buttonFillRandom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonFillRandom.Location = new System.Drawing.Point(699, 110);
             this.buttonFillRandom.Name = "buttonFillRandom";
             this.buttonFillRandom.Size = new System.Drawing.Size(75, 23);
