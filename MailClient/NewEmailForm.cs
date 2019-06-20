@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using MimeKit;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,10 +15,12 @@ namespace MailClient
         private string _host;
         private int _port;
 
+        public string Attachments { get; private set; }
+
         public NewEmailForm(MailClientForm parentForm)
         {
             _parentForm = parentForm;
-
+  
             _username = _parentForm.MailReceiver.Login;
             _password = _parentForm.MailReceiver.Password;
             InitializeComponent();
@@ -67,7 +70,7 @@ namespace MailClient
                 {
                     var mailSender = new MailSender(_host, _port, true, _username, _password);
                     mailSender.Connect();
-                    var sentEmail = mailSender.Send(tbFrom.Text, tbTo.Text, tbSubject.Text, tbBody.Text);
+                    var sentEmail = mailSender.Send(tbFrom.Text, tbTo.Text, tbSubject.Text, tbBody.Text, Attachments);
 
                     mailSender.Disconnect();
 
@@ -101,6 +104,38 @@ namespace MailClient
             Faker faker = new Bogus.Faker();
             tbBody.Text = faker.Lorem.Sentences(new Random().Next(10, 50));
             tbSubject.Text = faker.Lorem.Sentence();
+        }
+
+        private void buttonBrowse_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Multiselect = true;
+
+            if(openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                for(int i=0; i<openFileDialog.FileNames.Length;++i)
+                {
+                    if (i == 0)
+                    {
+                        if (tbAttach.Text != "")
+                        {
+                            tbAttach.Text += ";";
+                            Attachments += ";";
+                        }
+                    }
+
+                    if ((i+1) == openFileDialog.FileNames.Length)
+                    {
+                        Attachments += openFileDialog.FileNames[i];
+                        tbAttach.Text += Path.GetFileName(openFileDialog.FileNames[i]);
+                    }
+                    else
+                    {
+                        Attachments += openFileDialog.FileNames[i] + ";";
+                        tbAttach.Text += Path.GetFileName(openFileDialog.FileNames[i]) + ";";
+                    }
+                }
+            }
         }
     }
 }

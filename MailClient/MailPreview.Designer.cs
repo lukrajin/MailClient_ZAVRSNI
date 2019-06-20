@@ -43,6 +43,8 @@
             this.webBrowserBody = new System.Windows.Forms.WebBrowser();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.pictureBoxLoading = new System.Windows.Forms.PictureBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLoading)).BeginInit();
             this.SuspendLayout();
             // 
@@ -80,7 +82,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label4.Location = new System.Drawing.Point(13, 149);
+            this.label4.Location = new System.Drawing.Point(13, 177);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(46, 20);
             this.label4.TabIndex = 3;
@@ -93,12 +95,12 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbBody.BackColor = System.Drawing.Color.White;
             this.tbBody.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.tbBody.Location = new System.Drawing.Point(12, 178);
+            this.tbBody.Location = new System.Drawing.Point(12, 202);
             this.tbBody.Multiline = true;
             this.tbBody.Name = "tbBody";
             this.tbBody.ReadOnly = true;
             this.tbBody.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbBody.Size = new System.Drawing.Size(763, 356);
+            this.tbBody.Size = new System.Drawing.Size(838, 401);
             this.tbBody.TabIndex = 4;
             // 
             // tbSubject
@@ -107,10 +109,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbSubject.BackColor = System.Drawing.Color.White;
             this.tbSubject.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.tbSubject.Location = new System.Drawing.Point(79, 110);
+            this.tbSubject.Location = new System.Drawing.Point(114, 110);
             this.tbSubject.Name = "tbSubject";
             this.tbSubject.ReadOnly = true;
-            this.tbSubject.Size = new System.Drawing.Size(696, 25);
+            this.tbSubject.Size = new System.Drawing.Size(737, 25);
             this.tbSubject.TabIndex = 5;
             // 
             // tbTo
@@ -119,10 +121,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbTo.BackColor = System.Drawing.Color.White;
             this.tbTo.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.tbTo.Location = new System.Drawing.Point(80, 79);
+            this.tbTo.Location = new System.Drawing.Point(114, 79);
             this.tbTo.Name = "tbTo";
             this.tbTo.ReadOnly = true;
-            this.tbTo.Size = new System.Drawing.Size(695, 25);
+            this.tbTo.Size = new System.Drawing.Size(736, 25);
             this.tbTo.TabIndex = 6;
             // 
             // tbFrom
@@ -131,10 +133,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbFrom.BackColor = System.Drawing.Color.White;
             this.tbFrom.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.tbFrom.Location = new System.Drawing.Point(80, 48);
+            this.tbFrom.Location = new System.Drawing.Point(114, 43);
             this.tbFrom.Name = "tbFrom";
             this.tbFrom.ReadOnly = true;
-            this.tbFrom.Size = new System.Drawing.Size(695, 25);
+            this.tbFrom.Size = new System.Drawing.Size(736, 25);
             this.tbFrom.TabIndex = 7;
             // 
             // lbDate
@@ -150,7 +152,7 @@
             // buttonForward
             // 
             this.buttonForward.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonForward.Location = new System.Drawing.Point(619, 149);
+            this.buttonForward.Location = new System.Drawing.Point(694, 177);
             this.buttonForward.Name = "buttonForward";
             this.buttonForward.Size = new System.Drawing.Size(75, 23);
             this.buttonForward.TabIndex = 9;
@@ -161,7 +163,7 @@
             // buttonReply
             // 
             this.buttonReply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonReply.Location = new System.Drawing.Point(700, 149);
+            this.buttonReply.Location = new System.Drawing.Point(775, 177);
             this.buttonReply.Name = "buttonReply";
             this.buttonReply.Size = new System.Drawing.Size(75, 23);
             this.buttonReply.TabIndex = 10;
@@ -174,10 +176,10 @@
             this.webBrowserBody.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.webBrowserBody.Location = new System.Drawing.Point(12, 178);
+            this.webBrowserBody.Location = new System.Drawing.Point(12, 202);
             this.webBrowserBody.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowserBody.Name = "webBrowserBody";
-            this.webBrowserBody.Size = new System.Drawing.Size(763, 356);
+            this.webBrowserBody.Size = new System.Drawing.Size(838, 377);
             this.webBrowserBody.TabIndex = 11;
             this.webBrowserBody.Visible = false;
             // 
@@ -188,20 +190,40 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxLoading.BackColor = System.Drawing.Color.White;
             this.pictureBoxLoading.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxLoading.Image")));
-            this.pictureBoxLoading.Location = new System.Drawing.Point(11, 178);
+            this.pictureBoxLoading.Location = new System.Drawing.Point(12, 202);
             this.pictureBoxLoading.Name = "pictureBoxLoading";
-            this.pictureBoxLoading.Size = new System.Drawing.Size(763, 356);
+            this.pictureBoxLoading.Size = new System.Drawing.Size(838, 401);
             this.pictureBoxLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBoxLoading.TabIndex = 12;
             this.pictureBoxLoading.TabStop = false;
             this.pictureBoxLoading.Visible = false;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label5.Location = new System.Drawing.Point(13, 147);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(95, 20);
+            this.label5.TabIndex = 20;
+            this.label5.Text = "Attachments:";
+            // 
+            // panel1
+            // 
+            this.panel1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.panel1.Location = new System.Drawing.Point(114, 148);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(736, 25);
+            this.panel1.TabIndex = 21;
             // 
             // MailPreview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ClientSize = new System.Drawing.Size(787, 546);
+            this.ClientSize = new System.Drawing.Size(862, 615);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.pictureBoxLoading);
             this.Controls.Add(this.webBrowserBody);
             this.Controls.Add(this.buttonReply);
@@ -241,5 +263,7 @@
         private System.Windows.Forms.WebBrowser webBrowserBody;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.PictureBox pictureBoxLoading;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Panel panel1;
     }
 }

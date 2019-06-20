@@ -26,7 +26,7 @@ namespace MailClient
             this.login = login;
             this.password = password;
         }
-        public MimeMessage Send(string from, string to, string subject, string body)
+        public MimeMessage Send(string from, string to, string subject, string body, string attachments)
         {
             var message = new MimeMessage();
 
@@ -35,13 +35,27 @@ namespace MailClient
                 message.From.Add(new MailboxAddress(address));
             }
 
-            foreach(var address in to.Split(';'))
+            foreach (var address in to.Split(';'))
             {
                 message.To.Add(new MailboxAddress(address));
             }
 
             message.Subject = subject;
-            message.Body = new TextPart { Text = body };
+
+            var builder = new BodyBuilder();
+
+            // Set the plain-text version of the message text
+            builder.TextBody = body;
+
+            if (!string.IsNullOrEmpty(attachments))
+            {
+                foreach (var attachment in attachments.Split(';'))
+                {
+                    builder.Attachments.Add(attachment);
+                }
+            }
+            // Now we just need to set the message body and we're done
+            message.Body = builder.ToMessageBody();
 
             client.Send(message);
 

@@ -40,6 +40,9 @@
             this.btnSend = new System.Windows.Forms.Button();
             this.pictureBoxLoading = new System.Windows.Forms.PictureBox();
             this.buttonFillRandom = new System.Windows.Forms.Button();
+            this.tbAttach = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.buttonBrowse = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLoading)).BeginInit();
             this.SuspendLayout();
             // 
@@ -49,10 +52,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbFrom.BackColor = System.Drawing.Color.White;
             this.tbFrom.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.tbFrom.Location = new System.Drawing.Point(79, 9);
+            this.tbFrom.Location = new System.Drawing.Point(125, 9);
             this.tbFrom.Name = "tbFrom";
             this.tbFrom.ReadOnly = true;
-            this.tbFrom.Size = new System.Drawing.Size(696, 25);
+            this.tbFrom.Size = new System.Drawing.Size(693, 25);
             this.tbFrom.TabIndex = 15;
             // 
             // tbTo
@@ -61,9 +64,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbTo.BackColor = System.Drawing.Color.White;
             this.tbTo.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.tbTo.Location = new System.Drawing.Point(79, 40);
+            this.tbTo.Location = new System.Drawing.Point(125, 40);
             this.tbTo.Name = "tbTo";
-            this.tbTo.Size = new System.Drawing.Size(696, 25);
+            this.tbTo.Size = new System.Drawing.Size(693, 25);
             this.tbTo.TabIndex = 14;
             this.tbTo.TextChanged += new System.EventHandler(this.tbTo_TextChanged);
             // 
@@ -73,9 +76,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbSubject.BackColor = System.Drawing.Color.White;
             this.tbSubject.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.tbSubject.Location = new System.Drawing.Point(78, 71);
+            this.tbSubject.Location = new System.Drawing.Point(125, 71);
             this.tbSubject.Name = "tbSubject";
-            this.tbSubject.Size = new System.Drawing.Size(697, 25);
+            this.tbSubject.Size = new System.Drawing.Size(693, 25);
             this.tbSubject.TabIndex = 13;
             // 
             // tbBody
@@ -85,19 +88,19 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbBody.BackColor = System.Drawing.Color.White;
             this.tbBody.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.tbBody.Location = new System.Drawing.Point(11, 139);
+            this.tbBody.Location = new System.Drawing.Point(11, 170);
             this.tbBody.MinimumSize = new System.Drawing.Size(679, 266);
             this.tbBody.Multiline = true;
             this.tbBody.Name = "tbBody";
             this.tbBody.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbBody.Size = new System.Drawing.Size(763, 356);
+            this.tbBody.Size = new System.Drawing.Size(806, 309);
             this.tbBody.TabIndex = 12;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label4.Location = new System.Drawing.Point(12, 116);
+            this.label4.Location = new System.Drawing.Point(12, 147);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(46, 20);
             this.label4.TabIndex = 11;
@@ -139,7 +142,7 @@
             this.btnSend.BackColor = System.Drawing.Color.LightGreen;
             this.btnSend.Enabled = false;
             this.btnSend.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.btnSend.Location = new System.Drawing.Point(669, 508);
+            this.btnSend.Location = new System.Drawing.Point(712, 492);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(105, 33);
             this.btnSend.TabIndex = 16;
@@ -151,7 +154,7 @@
             // 
             this.pictureBoxLoading.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.pictureBoxLoading.Image = global::MailClient.Properties.Resources.loading;
-            this.pictureBoxLoading.Location = new System.Drawing.Point(11, 501);
+            this.pictureBoxLoading.Location = new System.Drawing.Point(11, 485);
             this.pictureBoxLoading.Name = "pictureBoxLoading";
             this.pictureBoxLoading.Size = new System.Drawing.Size(42, 40);
             this.pictureBoxLoading.TabIndex = 17;
@@ -161,7 +164,7 @@
             // buttonFillRandom
             // 
             this.buttonFillRandom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonFillRandom.Location = new System.Drawing.Point(699, 110);
+            this.buttonFillRandom.Location = new System.Drawing.Point(742, 141);
             this.buttonFillRandom.Name = "buttonFillRandom";
             this.buttonFillRandom.Size = new System.Drawing.Size(75, 23);
             this.buttonFillRandom.TabIndex = 18;
@@ -169,12 +172,52 @@
             this.buttonFillRandom.UseVisualStyleBackColor = true;
             this.buttonFillRandom.Click += new System.EventHandler(this.buttonFillRandom_Click);
             // 
+            // tbAttach
+            // 
+            this.tbAttach.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbAttach.BackColor = System.Drawing.Color.White;
+            this.tbAttach.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.tbAttach.Location = new System.Drawing.Point(125, 102);
+            this.tbAttach.Name = "tbAttach";
+            this.tbAttach.ReadOnly = true;
+            this.tbAttach.Size = new System.Drawing.Size(639, 25);
+            this.tbAttach.TabIndex = 20;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label5.Location = new System.Drawing.Point(11, 105);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(95, 20);
+            this.label5.TabIndex = 19;
+            this.label5.Text = "Attachments:";
+            // 
+            // buttonBrowse
+            // 
+            this.buttonBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonBrowse.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.buttonBrowse.BackgroundImage = global::MailClient.Properties.Resources.icons8_opened_folder_40;
+            this.buttonBrowse.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.buttonBrowse.FlatAppearance.BorderSize = 0;
+            this.buttonBrowse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonBrowse.Location = new System.Drawing.Point(766, 101);
+            this.buttonBrowse.Name = "buttonBrowse";
+            this.buttonBrowse.Size = new System.Drawing.Size(51, 27);
+            this.buttonBrowse.TabIndex = 21;
+            this.buttonBrowse.UseVisualStyleBackColor = false;
+            this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
+            // 
             // NewEmailForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ClientSize = new System.Drawing.Size(787, 546);
+            this.ClientSize = new System.Drawing.Size(830, 530);
+            this.Controls.Add(this.buttonBrowse);
+            this.Controls.Add(this.tbAttach);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.buttonFillRandom);
             this.Controls.Add(this.pictureBoxLoading);
             this.Controls.Add(this.btnSend);
@@ -209,5 +252,8 @@
         private System.Windows.Forms.Button btnSend;
         private System.Windows.Forms.PictureBox pictureBoxLoading;
         private System.Windows.Forms.Button buttonFillRandom;
+        private System.Windows.Forms.TextBox tbAttach;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button buttonBrowse;
     }
 }
