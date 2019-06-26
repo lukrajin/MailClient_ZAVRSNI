@@ -12,8 +12,6 @@ namespace MailClient
         private string _username;
         private string _password;
         private MailClientForm _parentForm;
-        private string _host;
-        private int _port;
 
         public string Attachments { get; private set; }
 
@@ -27,30 +25,14 @@ namespace MailClient
       
             if (!_username.Contains("@"))
             {
-                if (parentForm.MailReceiver.Host.Contains("yandex"))
-                {
-                    tbFrom.Text = _username + "@yandex.ru";
-                }
-                else
-                {
-                    tbFrom.Text = _username + "@gmail.com";
-                }
+                tbFrom.Text = _username + _parentForm.ServerInfo.LoginSuffix;
             }
             else
             {
                 tbFrom.Text = _username;
             }
 
-            if (parentForm.MailReceiver.Host.Contains("yandex"))
-            {
-                _host = ServerInfo.Yandex.SmtpServer;
-                _port = ServerInfo.Yandex.SmtpPort;
-            }
-            else
-            {
-                _host = ServerInfo.Gmail.SmtpServer;
-                _port = ServerInfo.Gmail.SmtpPort;
-            }
+
 
         }
         public void LoadFromMailPreview(string to, string subject, string body)
@@ -68,7 +50,8 @@ namespace MailClient
             {
                 try
                 {
-                    var mailSender = new MailSender(_host, _port, true, _username, _password);
+                    var mailSender = new MailSender(_parentForm.ServerInfo.SmtpServer, _parentForm.ServerInfo.SmtpPort
+                        , true, _username, _password);
                     mailSender.Connect();
                     var sentEmail = mailSender.Send(tbFrom.Text, tbTo.Text, tbSubject.Text, tbBody.Text, Attachments);
 

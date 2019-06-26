@@ -13,6 +13,7 @@ namespace MailClient
 {
     public partial class MailClientForm : Form
     {
+        public ServerInfo ServerInfo { get; set; }
         private ImportExportTool ImportExportTool { get; set; }
         public MailReceiver MailReceiver { get; set; }
         public ConcurrentDictionary<string, SentEmail> SentEmails { get; set; }
@@ -517,6 +518,11 @@ namespace MailClient
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var result = MessageBox.Show($"Are you sure you want to delete {dataGridViewEmails.SelectedRows.Count} email/s?", 
+                "Delete", MessageBoxButtons.YesNoCancel);
+            if (result != DialogResult.Yes)
+                return;
+
             Task.Run(() =>
             {
                 if (CurrentView == EmailView.CustomFolder)
@@ -672,6 +678,11 @@ namespace MailClient
 
         private void deleteToolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            var result = MessageBox.Show($"Are you sure you want to delete {dataGridViewEmails.SelectedRows.Count} folder/s?",
+                "Delete", MessageBoxButtons.YesNoCancel);
+            if (result != DialogResult.Yes)
+                return;
+
             foreach (DataGridViewRow row in dataGridViewEmails.SelectedRows)
             {
                 CustomFolder folder;
@@ -825,6 +836,7 @@ namespace MailClient
             searchForm.Location = MousePosition;
             searchForm.Show();
         }
+
     }
     public enum EmailType
     { Inbox, SentEmails, CollectionEmail };

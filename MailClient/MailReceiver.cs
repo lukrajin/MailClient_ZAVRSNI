@@ -9,7 +9,19 @@ using System.Linq;
 
 namespace MailClient
 {
-    public class MailReceiver
+    public interface IMailReceiver
+    {
+        void Connect();
+        void Disconnect();
+        ConcurrentDictionary<string, InboxEmail> GetInboxEmailList();
+        ConcurrentDictionary<string, SentEmail> GetSentEmailList();
+        MimeMessage GetEmail(EmailType emailType, UniqueId uniqueId);
+        void DeleteEmail(EmailType emailType, UniqueId uniqueId);
+        void SetMessageSeen(EmailType emailType, UniqueId uniqueId);
+        void AddMessageToFolder(EmailType emailType, MimeMessage mimeMessage);
+
+    }
+    public class MailReceiver: IMailReceiver
     {
         private static string[] CommonSentFolderNames = {"sent", "Sent",
             "Sent Items", "Sent Mail","Sent Email", "Poslano", "sent-items", "sent-email", "sent-mail"};

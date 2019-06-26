@@ -19,4 +19,6 @@ namespace MailClient.Models
         public EmailType OriginalFolder { get; set; }
         public string CustomFolderName { get; set; }
     }
+
+
 }

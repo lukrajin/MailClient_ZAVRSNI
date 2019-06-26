@@ -18,4 +18,6 @@ namespace MailClient
         public bool IsRead { get; internal set; }
         public string PreviewText { get; set; }
     }
+
+
 }

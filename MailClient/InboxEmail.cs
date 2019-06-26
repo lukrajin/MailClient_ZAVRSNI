@@ -19,4 +19,6 @@ namespace MailClient
         public string PreviewText { get; set; }
 
     }
+
+
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -26,6 +27,18 @@ namespace MailClient
 
             comboBoxExportFrom.Items.Add("Inbox");
             comboBoxExportFrom.Items.Add("Sent Emails");
+
+            if (parentForm.ServerInfo.Preset != ServerInfo.ServerPreset.Gmail)
+            {
+                comboBoxImportFrom.Items.Add("Gmail");
+            }
+            if (parentForm.ServerInfo.Preset != ServerInfo.ServerPreset.Yandex)
+            {
+                comboBoxImportFrom.Items.Add("Yandex");
+            }
+
+            comboBoxImportFrom.Items.Add("Custom Server");
+            comboBoxImportFrom.Items.Add("Browse on PC");
         }
 
         private void comboBoxImportFrom_SelectedIndexChanged(object sender, EventArgs e)
@@ -35,13 +48,33 @@ namespace MailClient
                 labelFolder.Visible = true;
                 comboBoxServerFolder.Visible = true;
                 groupBoxCredentials.Visible = true;
+                labelImap.Visible = false;
+                labelImapPort.Visible = false;
+                textBoxImap.Visible = false;
+                textBoxImapPort.Visible = false;
+            }
+            else if(comboBoxImportFrom.Text == "Custom Server")
+            {
+                labelFolder.Visible = true;
+                comboBoxServerFolder.Visible = true;
+                groupBoxCredentials.Visible = true;
+                labelImap.Visible = true;
+                labelImapPort.Visible = true;
+                textBoxImap.Visible = true;
+                textBoxImapPort.Visible = true;
             }
             else
             {
                 labelFolder.Visible = false;
                 comboBoxServerFolder.Visible = false;
                 groupBoxCredentials.Visible = false;
+                labelImap.Visible = false;
+                labelImapPort.Visible = false;
+                textBoxImap.Visible = false;
+                textBoxImapPort.Visible = false;
             }
+
+         
         }
 
         private void buttonImport_Click(object sender, EventArgs e)
@@ -51,9 +84,17 @@ namespace MailClient
                 MessageBox.Show("Please provide valid parameters.", "Failed");
                 return;
             }
-            if (comboBoxImportFrom.Text == "Gmail" || comboBoxImportFrom.Text == "Yandex")
+            if (comboBoxImportFrom.Text == "Gmail" || comboBoxImportFrom.Text == "Yandex" || comboBoxImportFrom.Text == "Custom Folder")
             {
                 if (comboBoxServerFolder.Text == "" || tbUsername.Text == "" || tbPassword.Text == "")
+                {
+                    MessageBox.Show("Please provide valid parameters.", "Failed");
+                    return;
+                }
+            }
+            if(comboBoxImportFrom.Text == "Custom Folder")
+            {
+                if (textBoxImap.Text == "" || textBoxImapPort.Text == "")
                 {
                     MessageBox.Show("Please provide valid parameters.", "Failed");
                     return;
@@ -104,7 +145,7 @@ namespace MailClient
                     this.Invoke((Action)(() => pictureBoxLoading.Visible = true));
 
                     _importExportTool.ImportEmailsFromServer(
-                        ImportExportTool.ServerImportType.FromGmail, sourceType, destinationType,
+                        new ServerInfo(ServerInfo.ServerPreset.Gmail), sourceType, destinationType,
                         tbUsername.Text, tbPassword.Text, destinationFolderName);
 
                     this.Invoke((Action)(() => pictureBoxLoading.Visible = false));
@@ -118,7 +159,29 @@ namespace MailClient
                     this.Invoke((Action)(() => pictureBoxLoading.Visible = true));
 
                     _importExportTool.ImportEmailsFromServer(
-                        ImportExportTool.ServerImportType.FromYandex, sourceType, destinationType,
+                        new ServerInfo(ServerInfo.ServerPreset.Yandex), sourceType, destinationType,
+                        tbUsername.Text, tbPassword.Text, destinationFolderName);
+
+                    this.Invoke((Action)(() => pictureBoxLoading.Visible = false));
+                    this.Invoke((Action)(() => this.Close()));
+                });
+            }
+            else if(comboBoxImportFrom.Text == "Custom Server")
+            {
+                if(!Regex.IsMatch(textBoxImapPort.Text, @"^\d+$"))
+                {
+                    MessageBox.Show("IMAP port must be numeric value", "Failed");
+                    return;
+                }
+
+                var serverInfo = new ServerInfo(textBoxImap.Text, Convert.ToInt32(textBoxImapPort.Text));
+
+                Task.Run(() =>
+                {
+                    this.Invoke((Action)(() => pictureBoxLoading.Visible = true));
+
+                    _importExportTool.ImportEmailsFromServer(
+                        serverInfo, sourceType, destinationType,
                         tbUsername.Text, tbPassword.Text, destinationFolderName);
 
                     this.Invoke((Action)(() => pictureBoxLoading.Visible = false));
@@ -208,10 +271,14 @@ namespace MailClient
             }
         }
 
-        private void ImportExportEmailsForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void buttonCancel_Click(object sender, EventArgs e)
         {
-            e.Cancel = true;
-            this.Hide();
+            this.Close();
+        }
+
+        private void buttonCancel2_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

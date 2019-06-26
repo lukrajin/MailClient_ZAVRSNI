@@ -10,7 +10,14 @@ using MimeKit;
 
 namespace MailClient
 {
-    public class MailSender
+    public interface IMailSender
+    {
+        void Connect();
+        void Disconnect();
+        MimeMessage Send(string from, string to, string subject, string body, string attachments);
+
+    }
+    public class MailSender: IMailSender
     {
         SmtpClient client = new SmtpClient();
         private string mailServer;

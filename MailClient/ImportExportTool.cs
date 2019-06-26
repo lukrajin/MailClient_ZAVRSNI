@@ -108,24 +108,12 @@ namespace MailClient
             return mimeMessages;
         }
 
-        public void ImportEmailsFromServer(ServerImportType importFrom, EmailType sourceType,
+        public void ImportEmailsFromServer(ServerInfo importFrom, EmailType sourceType,
             EmailType destinationType, string username, string password, string destinationFolderName = null)
         {
-            string host;
-            int port;
 
-            if (importFrom == ServerImportType.FromGmail)
-            {
-                host = ServerInfo.Gmail.ImapServer;
-                port = ServerInfo.Gmail.ImapPort;
-            }
-            else
-            {
-                host = ServerInfo.Yandex.ImapServer;
-                port = ServerInfo.Yandex.ImapPort;
-            }
-
-            MailReceiver mailReceiver = new MailReceiver(host, port, true, username, password, _parentForm);
+            MailReceiver mailReceiver = new MailReceiver(importFrom.ImapServer, importFrom.ImapPort, 
+                true, username, password, _parentForm);
 
             try
             {
@@ -450,6 +438,6 @@ namespace MailClient
             return emailsCollectionConcurrent;
         }
 
-        public enum ServerImportType { FromGmail, FromYandex };
+        public enum ServerImportType { FromGmail, FromYandex, CustomServer };
     }
 }

@@ -227,7 +227,7 @@
             this.panelLoading.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.panelLoading.Controls.Add(this.pictureBox1);
             this.panelLoading.Controls.Add(this.label1);
-            this.panelLoading.Location = new System.Drawing.Point(0, 43);
+            this.panelLoading.Location = new System.Drawing.Point(0, 65);
             this.panelLoading.Name = "panelLoading";
             this.panelLoading.Size = new System.Drawing.Size(1227, 523);
             this.panelLoading.TabIndex = 5;

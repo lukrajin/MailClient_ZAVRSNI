@@ -1,21 +1,52 @@
 ﻿namespace MailClient
 {
-    public static class ServerInfo
+    public class ServerInfo
     {
-        public static class Gmail
+        public string ImapServer { get; set; }
+        public int ImapPort { get; set; }
+        public string SmtpServer { get; set; }
+        public int SmtpPort { get; set; }
+        public string LoginSuffix { get; set; }
+
+        public ServerInfo(ServerPreset preset)
         {
-            public const string ImapServer = "imap.gmail.com";
-            public const int ImapPort = 993;
-            public const string SmtpServer = "smtp.gmail.com";
-            public const int SmtpPort = 465;
+            if (preset == ServerPreset.Gmail)
+            {
+                ImapServer = "imap.gmail.com";
+                ImapPort = 993;
+                SmtpServer = "smtp.gmail.com";
+                SmtpPort = 465;
+                LoginSuffix = "@gmail.com";
+            }
+            else
+            {
+                ImapServer = "imap.yandex.com";
+                ImapPort = 993;
+                SmtpServer = "smtp.yandex.com";
+                SmtpPort = 465;
+                LoginSuffix = "@yandex.com";
+            }
+
+            Preset = preset;
         }
 
-        public static class Yandex
+        public ServerInfo(string imapServer, int imapPort, string smtpServer, int smtpPort)
         {
-            public const string ImapServer = "imap.yandex.com";
-            public const int ImapPort = 993;
-            public const string SmtpServer = "smtp.yandex.com";
-            public const int SmtpPort = 465;
+            ImapServer = imapServer;
+            ImapPort = imapPort;
+            SmtpServer = smtpServer;
+            SmtpPort = smtpPort;
+            Preset = ServerPreset.Custom;
+            LoginSuffix = "@" + imapServer.Substring(imapServer.IndexOf(".") + 1);
         }
+        public ServerInfo(string imapServer, int imapPort)
+        {
+            ImapServer = imapServer;
+            ImapPort = imapPort;
+            Preset = ServerPreset.Custom;
+            LoginSuffix = "@" + imapServer.Substring(imapServer.IndexOf(".") + 1);
+        }
+        public ServerPreset Preset { get; set; }
+        public enum ServerPreset { Gmail, Yandex, Custom };
     }
 }
