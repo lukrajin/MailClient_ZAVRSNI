@@ -300,7 +300,8 @@
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(510, 355);
+            this.MaximumSize = new System.Drawing.Size(524, 582);
+            this.MinimumSize = new System.Drawing.Size(524, 582);
             this.Name = "LoginForm";
             this.Text = "Login";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LoginForm_FormClosing);

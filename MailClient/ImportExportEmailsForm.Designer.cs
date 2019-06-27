@@ -346,10 +346,11 @@
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(493, 472);
             this.MinimumSize = new System.Drawing.Size(493, 472);
             this.Name = "ImportExportEmailsForm";
             this.Text = "Import/Export Emails";
-           
+            this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLoading)).EndInit();

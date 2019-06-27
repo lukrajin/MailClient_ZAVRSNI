@@ -51,7 +51,6 @@ namespace MailClient
 
             var builder = new BodyBuilder();
 
-            // Set the plain-text version of the message text
             builder.TextBody = body;
 
             if (!string.IsNullOrEmpty(attachments))
@@ -61,7 +60,7 @@ namespace MailClient
                     builder.Attachments.Add(attachment);
                 }
             }
-            // Now we just need to set the message body and we're done
+       
             message.Body = builder.ToMessageBody();
 
             client.Send(message);

@@ -10,7 +10,24 @@ using System.Windows.Forms;
 
 namespace MailClient
 {
-    public class ImportExportTool
+    public interface IImportExportTool
+    {
+        void ImportEmailsFromFile(EmailType destinationType, 
+            string path, 
+            string destinationFolderName = null);
+        void ImportEmailsFromServer(ServerInfo importFrom, 
+            EmailType sourceType,
+            EmailType destinationType, 
+            string username, 
+            string password, 
+            string destinationFolderName = null);
+        void ExportEmails(EmailType emailType, 
+            string path, 
+            string folderName = null);
+        
+
+    }
+    public class ImportExportTool: IImportExportTool
     {
         private MailClientForm _parentForm;
 
