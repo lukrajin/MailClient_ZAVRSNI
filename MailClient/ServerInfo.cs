@@ -7,7 +7,9 @@
         public string SmtpServer { get; set; }
         public int SmtpPort { get; set; }
         public string LoginSuffix { get; set; }
-
+        public ServerPreset Preset { get; set; }
+        public enum ServerPreset { Gmail, Yandex, Custom };
+  
         public ServerInfo(ServerPreset preset)
         {
             if (preset == ServerPreset.Gmail)
@@ -46,7 +48,6 @@
             Preset = ServerPreset.Custom;
             LoginSuffix = "@" + imapServer.Substring(imapServer.IndexOf(".") + 1);
         }
-        public ServerPreset Preset { get; set; }
-        public enum ServerPreset { Gmail, Yandex, Custom };
+  
     }
 }

@@ -289,20 +289,18 @@ namespace MailClient
         {
             if (emailType == EmailType.Inbox)
             {
-                foreach (var email in _parentForm.ReceivedEmails.Values)
+                var inboxMessages = _parentForm.MailReceiver.GetInboxMimeMessages();
+                foreach (var email in inboxMessages)
                 {
-                    var message = _parentForm.MailReceiver.GetEmail(EmailType.Inbox, email.UniqueId);
-
-                    message.WriteTo(Path.Combine(path, email.Id + ".eml"));
+                    email.WriteTo(Path.Combine(path, email.MessageId + ".eml"));
                 }
             }
             else if (emailType == EmailType.SentEmails)
             {
-                foreach (var email in _parentForm.SentEmails.Values)
+                var sentMessages = _parentForm.MailReceiver.GetSentMimeMessages();
+                foreach (var email in sentMessages)
                 {
-                    var message = _parentForm.MailReceiver.GetEmail(EmailType.SentEmails, email.UniqueId);
-
-                    message.WriteTo(Path.Combine(path, email.Id + ".eml"));
+                    email.WriteTo(Path.Combine(path, email.MessageId + ".eml"));
                 }
             }
             else
