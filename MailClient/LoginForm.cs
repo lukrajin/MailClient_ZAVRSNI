@@ -65,8 +65,6 @@ namespace MailClient
                                      _parentForm.toolStripStatusLabel.Text = "Logged In - " + mailReceiver.Login));
                             }
 
-                            _parentForm.Invoke((Action)(() => _parentForm.toolStripStatusLabel.Text ="you@gmail.com"));
-
                             _parentForm.ServerInfo = serverInfo;
                             _parentForm.Invoke((Action)(() => _parentForm.panelLoading.Visible = true));
                            
